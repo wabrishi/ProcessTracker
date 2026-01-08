@@ -1,0 +1,196 @@
+/* Mobile-first responsive styles for ProcessTracker */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+h1, h2, h3 {
+    color: #2c3e50;
+}
+
+h1 {
+    font-size: 1.5em;
+}
+
+h2 {
+    font-size: 1.3em;
+}
+
+form {
+    background: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="time"], select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px; /* Prevents zoom on iOS */
+}
+
+button, input[type="submit"] {
+    background: #3498db;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+button:hover, input[type="submit"]:hover {
+    background: #2980b9;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.message {
+    color: green;
+    font-weight: bold;
+}
+
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+    resize: vertical;
+}
+
+.candidate-card {
+    background: #fff;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Mobile-first responsive tables */
+.responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.responsive-table th,
+.responsive-table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Mobile: stack cells */
+.responsive-table thead {
+    display: none;
+}
+.responsive-table tr {
+    display: block;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+.responsive-table td {
+    display: block;
+    width: 100%;
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+    border: none;
+}
+.responsive-table td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+}
+
+/* Desktop overrides */
+@media (min-width: 769px) {
+    body {
+        font-size: 16px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    form {
+        padding: 20px;
+    }
+
+    input[type="text"], input[type="email"], input[type="password"], input[type="date"], input[type="time"], select, textarea {
+        padding: 10px;
+    }
+
+    button, input[type="submit"] {
+        padding: 10px 15px;
+        width: auto;
+    }
+
+    .responsive-table thead {
+        display: table-header-group;
+    }
+    .responsive-table tr {
+        display: table-row;
+        border: none;
+        margin-bottom: 0;
+        border-radius: 0;
+    }
+    .responsive-table td {
+        display: table-cell;
+        width: auto;
+        text-align: left;
+        position: static;
+        padding-left: 8px;
+        border: none;
+    }
+    .responsive-table td:before {
+        display: none;
+    }
+    .responsive-table th {
+        background: #f2f2f2;
+    }
+}

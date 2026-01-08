@@ -1,0 +1,8 @@
+{
+    "host": "smtp.example.com",
+    "port": 587,
+    "username": "",
+    "password": "",
+    "from_email": "noreply@company.com",
+    "from_name": "Recruitment Team"
+}

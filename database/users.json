@@ -1,0 +1,18 @@
+[
+    {
+        "id": "U001",
+        "name": "Admin",
+        "email": "admin@company.com",
+        "role": "ADMIN",
+        "password": "$2y$10$KDemgOkB.dZQJcZXCiiNr.fLt5CVwJLvAQwfhNt6PNwCp.lf6STxq",
+        "active": true
+    },
+    {
+        "id": "U002",
+        "name": "RISHIRAJ",
+        "email": "wabrishi@gmail.com",
+        "role": "HR",
+        "password": "$2y$10$zmYmuTs1.M/.b.uXTbBQn.FiSTSXwGyBLmdVccpYxH8z6SpA2/i8q",
+        "active": true
+    }
+]
