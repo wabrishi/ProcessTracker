@@ -400,5 +400,23 @@
         "step": "Call: interested",
         "action_by": "U002",
         "timestamp": "2026-01-22 14:00:58"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "interview_result",
+        "action_by": "U001",
+        "timestamp": "2026-01-22 18:09:54"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "2nd Round Interview \u2013 Result",
+        "action_by": "U001",
+        "timestamp": "2026-01-22 18:09:54"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Call: not_pick",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 19:19:11"
     }
 ]
