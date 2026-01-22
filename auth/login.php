@@ -1,5 +1,5 @@
 <?php
-include '../includes/helpers.php';
+include_once __DIR__ . '/../includes/helpers.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
@@ -28,11 +28,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container">
         <h1>Login</h1>
         <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
-        <form method="post">
+        <form method="post" id="loginForm">
             <label>Email: <input type="email" name="email" required></label>
             <label>Password: <input type="password" name="password" required></label>
             <button type="submit">Login</button>
         </form>
     </div>
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loader"></div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        });
+    </script>
 </body>
 </html>

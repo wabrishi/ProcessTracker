@@ -1,0 +1,15 @@
+# Format 1: name/phone/email/location/position (creates new candidates)
+# Format 2: candidate_id or email (assigns existing candidates)
+
+# Format 1 examples (with position):
+John Doe/9876543210/john.doe@example.com/Delhi/Software Developer
+Jane Smith/9876543211/jane.smith@example.com/Mumbai/HR Manager
+
+# Format 1 examples (without position - uses default):
+John Doe/9876543210/john.doe@example.com/Delhi
+
+# Format 2 examples (assign existing):
+CAND001
+CAND002
+email1@example.com
+email2@example.com

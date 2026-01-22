@@ -1,1 +1,404 @@
-[]
+[
+    {
+        "candidate_id": "CAND518",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:14:59"
+    },
+    {
+        "candidate_id": "CAND753",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:19:59"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:26:37"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "Document Verification",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:27:37"
+    },
+    {
+        "candidate_id": "CAND753",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:35:49"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "interview_schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:37:40"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "1st Round Interview \u2013 Schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:37:40"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:38:23"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:38:25"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:38:53"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "Document Verification",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:39:53"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "interview_schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:40:44"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "1st Round Interview \u2013 Schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:40:44"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "interview_result",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:41:52"
+    },
+    {
+        "candidate_id": "CAND349",
+        "step": "1st Round Interview \u2013 Result",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:41:52"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "interview_result",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:46:52"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "1st Round Interview \u2013 Result",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:46:52"
+    },
+    {
+        "candidate_id": "CAND787",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:47:17"
+    },
+    {
+        "candidate_id": "CAND787",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:47:19"
+    },
+    {
+        "candidate_id": "CAND787",
+        "step": "confirmation",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:48:02"
+    },
+    {
+        "candidate_id": "CAND787",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:48:02"
+    },
+    {
+        "candidate_id": "CAND787",
+        "step": "Document Verification",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:54:49"
+    },
+    {
+        "candidate_id": "CAND432",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:55:31"
+    },
+    {
+        "candidate_id": "CAND432",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:55:33"
+    },
+    {
+        "candidate_id": "CAND432",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 11:59:03"
+    },
+    {
+        "candidate_id": "CAND233",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:05:59"
+    },
+    {
+        "candidate_id": "CAND233",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:06:01"
+    },
+    {
+        "candidate_id": "CAND233",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:06:22"
+    },
+    {
+        "candidate_id": "CAND176",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:23:28"
+    },
+    {
+        "candidate_id": "CAND176",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:23:30"
+    },
+    {
+        "candidate_id": "CAND176",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:23:46"
+    },
+    {
+        "candidate_id": "CAND858",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:25:49"
+    },
+    {
+        "candidate_id": "CAND858",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:25:51"
+    },
+    {
+        "candidate_id": "CAND858",
+        "step": "confirmation",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:26:13"
+    },
+    {
+        "candidate_id": "CAND858",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:26:13"
+    },
+    {
+        "candidate_id": "CAND449",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:30:34"
+    },
+    {
+        "candidate_id": "CAND449",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:30:36"
+    },
+    {
+        "candidate_id": "CAND449",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:30:50"
+    },
+    {
+        "candidate_id": "CAND449",
+        "step": "Document Verification",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:31:00"
+    },
+    {
+        "candidate_id": "CAND590",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:32:23"
+    },
+    {
+        "candidate_id": "CAND590",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:32:25"
+    },
+    {
+        "candidate_id": "CAND590",
+        "step": "confirmation",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:32:33"
+    },
+    {
+        "candidate_id": "CAND590",
+        "step": "Confirmation Letter OR Cancellation Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:32:33"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "interview_schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:35:44"
+    },
+    {
+        "candidate_id": "CAND518",
+        "step": "2nd Round Interview \u2013 Schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-08 12:35:44"
+    },
+    {
+        "candidate_id": "CAND969",
+        "step": "Call: interested",
+        "action_by": "U003",
+        "timestamp": "2026-01-09 03:12:41"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-09 03:13:44"
+    },
+    {
+        "candidate_id": "CAND969",
+        "step": "Call: interested",
+        "action_by": "U003",
+        "timestamp": "2026-01-09 03:14:23"
+    },
+    {
+        "candidate_id": "CAND969",
+        "step": "Call: interested",
+        "action_by": "U003",
+        "timestamp": "2026-01-09 03:24:34"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-09 03:28:01"
+    },
+    {
+        "candidate_id": "CAND969",
+        "step": "Call: interested",
+        "action_by": "U003",
+        "timestamp": "2026-01-09 03:28:29"
+    },
+    {
+        "candidate_id": "CAND969",
+        "step": "Call: interested",
+        "action_by": "U003",
+        "timestamp": "2026-01-09 03:35:13"
+    },
+    {
+        "candidate_id": "CAND969",
+        "step": "Call: interested",
+        "action_by": "U003",
+        "timestamp": "2026-01-09 03:42:50"
+    },
+    {
+        "candidate_id": "CAND969",
+        "step": "Call: interested",
+        "action_by": "U003",
+        "timestamp": "2026-01-09 04:27:43"
+    },
+    {
+        "candidate_id": "CAND623",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:02:25"
+    },
+    {
+        "candidate_id": "CAND425",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:11:42"
+    },
+    {
+        "candidate_id": "CAND623",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:12:59"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:27:12"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Call: not_interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:28:39"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:43:40"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Call: not_interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:44:24"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Document Uploaded: face-mesh_face-mesh-a11-e6ce06bf1c4d605dc1c9ab7b55ad6ea6.png",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:47:14"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Document Uploaded: face-mesh_face-mesh-a11-e6ce06bf1c4d605dc1c9ab7b55ad6ea6.png",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:47:26"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Document Uploaded: face-mesh_face-mesh-a11-e6ce06bf1c4d605dc1c9ab7b55ad6ea6.png",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:47:35"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Document Deleted: 6971f22ea35fc.png",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:47:37"
+    },
+    {
+        "candidate_id": "CAND537",
+        "step": "Document Deleted: 6971f22230019.png",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 09:47:38"
+    },
+    {
+        "candidate_id": "CAND006",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-22 14:00:58"
+    }
+]

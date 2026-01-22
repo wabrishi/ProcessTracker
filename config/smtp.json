@@ -1,8 +1,8 @@
 {
-    "host": "smtp.example.com",
-    "port": 587,
-    "username": "",
-    "password": "",
-    "from_email": "noreply@company.com",
-    "from_name": "Recruitment Team"
+    "host": "smtp.hostinger.com",
+    "port": 465,
+    "username": "hr@aakashaairways.com",
+    "password": "Jobs@#12345$%",
+    "from_email": "hr@aakashaairways.com",
+    "from_name": "Aakasha Services"
 }

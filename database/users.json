@@ -4,7 +4,7 @@
         "name": "Admin",
         "email": "admin@company.com",
         "role": "ADMIN",
-        "password": "$2y$10$KDemgOkB.dZQJcZXCiiNr.fLt5CVwJLvAQwfhNt6PNwCp.lf6STxq",
+        "password": "$2y$10$zmYmuTs1.M/.b.uXTbBQn.FiSTSXwGyBLmdVccpYxH8z6SpA2/i8q",
         "active": true
     },
     {
@@ -13,6 +13,14 @@
         "email": "wabrishi@gmail.com",
         "role": "HR",
         "password": "$2y$10$zmYmuTs1.M/.b.uXTbBQn.FiSTSXwGyBLmdVccpYxH8z6SpA2/i8q",
+        "active": true
+    },
+    {
+        "id": "U003",
+        "name": "Kiran",
+        "email": "stepinacademy24@gmail.com",
+        "role": "HR",
+        "password": "$2y$10$dxQQHUDKzDB5avUtHoLZMuwuUN5tnsmY6Af/eyTS7FOjRmynX4xKy",
         "active": true
     }
 ]

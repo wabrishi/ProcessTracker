@@ -3,6 +3,7 @@
 
 function uploadFile(array $file, string $targetDir, array $allowedTypes = ['pdf', 'doc', 'docx'], int $maxSize = 5 * 1024 * 1024): ?string {
     if ($file['error'] !== UPLOAD_ERR_OK) {
+        error_log("Upload error: " . $file['error'] . " for file " . ($file['name'] ?? 'unknown'));
         return null; // Upload error
     }
 
@@ -13,11 +14,13 @@ function uploadFile(array $file, string $targetDir, array $allowedTypes = ['pdf'
 
     // Validate extension
     if (!in_array($fileExt, $allowedTypes)) {
+        error_log("Invalid file type: $fileExt for $fileName");
         return null;
     }
 
     // Validate size
     if ($fileSize > $maxSize) {
+        error_log("File too large: $fileSize > $maxSize for $fileName");
         return null;
     }
 
@@ -29,6 +32,7 @@ function uploadFile(array $file, string $targetDir, array $allowedTypes = ['pdf'
         return $uniqueName;
     }
 
+    error_log("Failed to move uploaded file to $targetPath");
     return null;
 }
 
