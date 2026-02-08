@@ -1,0 +1,18 @@
+{
+    "sequences": [
+        {
+            "id": "krs_sequence",
+            "name": "KRS Candidates",
+            "prefix": "KRS-",
+            "padding": 4,
+            "current_value": 5,
+            "increment": 1,
+            "active": true,
+            "description": "KRS candidate ID sequence - generates IDs like KRS-0001, KRS-0002, etc."
+        }
+    ],
+    "settings": {
+        "default_sequence": "krs_sequence",
+        "allow_multiple_active": false
+    }
+}

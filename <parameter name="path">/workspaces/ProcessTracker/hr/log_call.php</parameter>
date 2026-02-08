@@ -1,0 +1,115 @@
+<parameter name="content"><?php
+/**
+ * Log Call Endpoint
+ * 
+ * Clean implementation to save call log data to candidates.json
+ * Used by dashboard.php for AJAX calls
+ */
+
+session_start();
+header('Content-Type: application/json');
+
+// Include required helpers
+require_once __DIR__ . '/../includes/helpers.php';
+
+// Validate request method
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid request method. Use POST.'
+    ]);
+    exit;
+}
+
+// Get and validate input
+$candidateId = $_POST['id'] ?? null;
+$result = $_POST['result'] ?? null;
+$remarks = $_POST['remarks'] ?? '';
+$hr = $_SESSION['user_id'] ?? 'system';
+
+// Validate required fields
+if (!$candidateId) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Missing candidate ID'
+    ]);
+    exit;
+}
+
+if (!$result) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Please select call result'
+    ]);
+    exit;
+}
+
+// Validate result value
+$validResults = ['interested', 'not_interested', 'not_pick'];
+if (!in_array($result, $validResults)) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Invalid call result. Must be: interested, not_interested, or not_pick'
+    ]);
+    exit;
+}
+
+// Get current candidates data
+$candidates = getCandidates();
+
+// Check if candidate exists
+if (!isset($candidates[$candidateId])) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Candidate not found: ' . $candidateId
+    ]);
+    exit;
+}
+
+// Create call log entry
+$callLogEntry = [
+    'timestamp' => date('Y-m-d H:i:s'),
+    'result' => $result,
+    'remarks' => $remarks,
+    'called_by' => $hr,
+    'phone' => $candidates[$candidateId]['phone'] ?? ''
+];
+
+// Initialize call_logs array if it doesn't exist
+if (!isset($candidates[$candidateId]['call_logs'])) {
+    $candidates[$candidateId]['call_logs'] = [];
+}
+
+// Add new call log to the beginning of the array (most recent first)
+array_unshift($candidates[$candidateId]['call_logs'], $callLogEntry);
+
+// Update quick reference fields
+$candidates[$candidateId]['last_call'] = $callLogEntry['timestamp'];
+$candidates[$candidateId]['last_called_by'] = $hr;
+$candidates[$candidateId]['call_result'] = $result;
+
+// Save to database
+if (!saveCandidates($candidates)) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'Failed to save call log to database'
+    ]);
+    exit;
+}
+
+// Log recruitment action
+logRecruitmentAction($candidateId, 'Call: ' . $result, $hr);
+
+// Return success response
+echo json_encode([
+    'success' => true,
+    'message' => 'Call logged successfully',
+    'data' => [
+        'id' => $candidateId,
+        'result' => $result,
+        'remarks' => $remarks,
+        'last_call' => $candidates[$candidateId]['last_call'],
+        'call_logs' => $candidates[$candidateId]['call_logs']
+    ]
+]);
+</parameter>

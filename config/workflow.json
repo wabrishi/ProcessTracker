@@ -1,0 +1,141 @@
+{
+    "name": "Default Recruitment Workflow",
+    "description": "Standard 7-step recruitment process",
+    "steps": [
+        {
+            "name": "Initialize Process",
+            "description": "this is the first stage default for all user",
+            "send_email": false,
+            "email_template": "",
+            "email_subject": "",
+            "has_form": true,
+            "form_type": "default",
+            "auto_advance": false,
+            "can_cancel": false,
+            "cancel_status": "CANCELLED",
+            "form_fields": [],
+            "step_number": 1
+        },
+        {
+            "step_number": 2,
+            "name": "Profile Selection",
+            "description": "Create candidate profile and upload resume",
+            "send_email": true,
+            "email_template": "profile_selected",
+            "email_subject": "Welcome to Our Recruitment Process",
+            "has_form": true,
+            "form_type": "candidate_creation",
+            "auto_advance": true,
+            "can_cancel": false,
+            "cancel_status": "CANCELLED",
+            "form_fields": []
+        },
+        {
+            "step_number": 3,
+            "name": "Offer Letter",
+            "description": "Send offer confirmation or rejection letter",
+            "send_email": true,
+            "email_template": "offer_letter",
+            "email_subject": "Offer Letter - {POSITION}",
+            "has_form": true,
+            "form_type": "choice",
+            "form_fields": [],
+            "auto_advance": false,
+            "can_cancel": true,
+            "cancel_status": "CANCELLED"
+        },
+        {
+            "step_number": 4,
+            "name": "Document Verification",
+            "description": "Verify candidate documents",
+            "send_email": false,
+            "email_template": "",
+            "email_subject": "",
+            "has_form": true,
+            "form_type": "document_verification",
+            "form_fields": [],
+            "auto_advance": true,
+            "can_cancel": true,
+            "cancel_status": "WITHDRAWN"
+        },
+        {
+            "step_number": 5,
+            "name": "1st Round Interview",
+            "description": "Schedule and conduct first round interview",
+            "send_email": true,
+            "email_template": "interview_schedule",
+            "email_subject": "Interview Schedule - {POSITION} - 1st Round",
+            "has_form": true,
+            "form_type": "interview_schedule",
+            "form_fields": [
+                {"name": "date", "label": "Interview Date", "type": "date", "required": true},
+                {"name": "time", "label": "Interview Time", "type": "time", "required": true},
+                {"name": "mode", "label": "Interview Mode", "type": "select", "options": ["In-Person", "Video Call", "Phone Call"], "required": true},
+                {"name": "interviewer", "label": "Interviewer Name", "type": "text", "required": true}
+            ],
+            "auto_advance": true,
+            "can_cancel": false,
+            "cancel_status": "CANCELLED"
+        },
+        {
+            "step_number": 6,
+            "name": "1st Round Result",
+            "description": "Record first round interview result",
+            "send_email": true,
+            "email_template": "interview_result",
+            "email_subject": "{POSITION} 1st Round Result - {RESULT}",
+            "has_form": true,
+            "form_type": "interview_result",
+            "form_fields": [
+                {"name": "result", "label": "Interview Result", "type": "select", "options": ["Passed", "Failed", "Pending"], "required": true},
+                {"name": "remarks", "label": "Remarks", "type": "textarea", "required": false}
+            ],
+            "auto_advance": true,
+            "can_cancel": false,
+            "cancel_status": "CANCELLED"
+        },
+        {
+            "step_number": 7,
+            "name": "2nd Round Interview",
+            "description": "Schedule and conduct second round interview",
+            "send_email": true,
+            "email_template": "interview_schedule",
+            "email_subject": "Interview Schedule - {POSITION} - 2nd Round",
+            "has_form": true,
+            "form_type": "interview_schedule",
+            "form_fields": [
+                {"name": "date", "label": "Interview Date", "type": "date", "required": true},
+                {"name": "time", "label": "Interview Time", "type": "time", "required": true},
+                {"name": "mode", "label": "Interview Mode", "type": "select", "options": ["In-Person", "Video Call", "Phone Call"], "required": true},
+                {"name": "interviewer", "label": "Interviewer Name", "type": "text", "required": true}
+            ],
+            "auto_advance": true,
+            "can_cancel": false,
+            "cancel_status": "CANCELLED"
+        },
+        {
+            "step_number": 8,
+            "name": "Final Selection",
+            "description": "Final interview result and selection",
+            "send_email": true,
+            "email_template": "interview_result",
+            "email_subject": "{POSITION} Final Selection - {RESULT}",
+            "has_form": true,
+            "form_type": "interview_result",
+            "form_fields": [
+                {"name": "result", "label": "Final Result", "type": "select", "options": ["Selected", "Rejected", "Waitlisted"], "required": true},
+                {"name": "remarks", "label": "Remarks", "type": "textarea", "required": false}
+            ],
+            "auto_advance": true,
+            "can_cancel": true,
+            "cancel_status": "REJECTED"
+        }
+    ],
+    "settings": {
+        "default_step": 1,
+        "enable_workflow_history": true,
+        "require_email_for_all_steps": false,
+        "allow_skip_steps": false,
+        "show_step_description": true
+    }
+}

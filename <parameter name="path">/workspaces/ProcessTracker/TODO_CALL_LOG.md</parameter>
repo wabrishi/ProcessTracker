@@ -1,0 +1,40 @@
+<parameter name="content"># Call Log Implementation Plan
+
+## Goal
+Rewrite the call log logic to save call data in `candidates.json` with clean, maintainable code.
+
+## Steps
+
+### Step 1: Create `logCall()` function in `includes/candidate.php`
+- [ ] Add a clean `logCall()` function that handles all call logging logic
+- [ ] Function should validate inputs and return success/failure with proper error handling
+- [ ] Include proper error logging
+
+### Step 2: Create new `hr/log_call.php` endpoint
+- [ ] Replace broken `update_call.php` with clean implementation
+- [ ] Use the new `logCall()` function
+- [ ] Return JSON response for AJAX calls
+- [ ] Handle all three result types: `interested`, `not_interested`, `not_pick`
+
+### Step 3: Update `hr/dashboard.php` to use new endpoint
+- [ ] Change AJAX fetch URL from `update_call.php` to `log_call.php`
+- [ ] Keep the same UI and modal functionality
+
+### Step 4: (Optional) Refactor `hr/candidate_details.php`
+- [ ] Use the new `logCall()` function for consistency
+- [ ] Keep existing form handling
+
+## Implementation Details
+
+### New logCall() function signature:
+```php
+function logCall(string $candidateId, string $result, string $remarks = '', ?string $calledBy = null): array {
+    // Returns: ['success' => bool, 'message' => string, 'data' => array]
+}
+```
+
+### New hr/log_call.php:
+- Simple endpoint for AJAX calls from dashboard
+- Returns JSON response
+- Proper error handling and validation
+</parameter>
