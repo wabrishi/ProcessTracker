@@ -120,4 +120,33 @@ function checkDatabaseHealth(): array {
         ]
     ];
 }
+
+/**
+ * Get mail logs for a specific candidate, sorted by date/time descending
+ */
+function getCandidateMailLogs(string $candidateId): array {
+    $mailLogsPath = __DIR__ . '/../database/mail_logs.json';
+    if (!file_exists($mailLogsPath)) {
+        return [];
+    }
+    
+    $mailLogs = readJsonFile($mailLogsPath);
+    
+    // Filter by candidate_id
+    $candidateLogs = [];
+    foreach ($mailLogs as $log) {
+        if (isset($log['candidate_id']) && $log['candidate_id'] === $candidateId) {
+            $candidateLogs[] = $log;
+        }
+    }
+    
+    // Sort by sent_at descending (newest first)
+    usort($candidateLogs, function($a, $b) {
+        $timeA = strtotime($a['sent_at'] ?? '0');
+        $timeB = strtotime($b['sent_at'] ?? '0');
+        return $timeB - $timeA;
+    });
+    
+    return $candidateLogs;
+}
 ?>
