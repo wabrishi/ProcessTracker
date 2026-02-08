@@ -418,5 +418,389 @@
         "step": "Call: not_pick",
         "action_by": "U002",
         "timestamp": "2026-01-22 19:19:11"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Call: not_pick",
+        "action_by": "U002",
+        "timestamp": "2026-01-23 12:22:03"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Call: not_pick",
+        "action_by": "U002",
+        "timestamp": "2026-01-23 12:22:09"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-23 12:28:41"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Call: not_interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-23 13:00:17"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Call logged: not_pick",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 09:46:04"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Call logged: not_pick",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 10:07:34"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 10:08:54"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 10:08:57"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 10:20:29"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Profile Selection",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 10:20:29"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:22:02"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Offer Letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:22:02"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:22:13"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Offer Letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:22:13"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Document Verification",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:25:54"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "interview_schedule",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:26:23"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "1st Round Interview",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:26:23"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "profile_selected",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:39:24"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "Profile Selection",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:39:24"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:42:33"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "Offer Letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:42:33"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "Document Verification",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:43:15"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "interview_schedule",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:43:40"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "1st Round Interview",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:43:40"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "interview_schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 10:45:20"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "2nd Round Interview",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 10:45:20"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "profile_selected",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:46:20"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Profile Selection",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:46:20"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:46:28"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Offer Letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:46:28"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "interview_result",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:50:54"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "Final Selection",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:50:54"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:51:01"
+    },
+    {
+        "candidate_id": "KRS-0003",
+        "step": "test",
+        "action_by": "U001",
+        "timestamp": "2026-01-24 10:51:01"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "Call logged: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:36:18"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:37:04"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "Profile Selection",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:37:04"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:40:11"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "Profile Selection",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:40:11"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "offer_letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:40:20"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "Offer Letter",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:40:20"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "Document Verification",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:40:28"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "interview_schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:40:36"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "1st Round Interview",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:40:36"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Document Verification",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:58:44"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "interview_schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:58:49"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "1st Round Interview",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:58:49"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "interview_result",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:59:18"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "1st Round Result",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 11:59:18"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Call logged: not_pick",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 12:16:39"
+    },
+    {
+        "candidate_id": "KRS-0004",
+        "step": "Call: interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 12:18:02"
+    },
+    {
+        "candidate_id": "KRS-0005",
+        "step": "Profile Created",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 12:21:46"
+    },
+    {
+        "candidate_id": "KRS-0005",
+        "step": "profile_selected",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 12:22:08"
+    },
+    {
+        "candidate_id": "KRS-0005",
+        "step": "Profile Selection",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 12:22:08"
+    },
+    {
+        "candidate_id": "KRS-0002",
+        "step": "Call logged: not_interested",
+        "action_by": "U002",
+        "timestamp": "2026-01-24 12:29:32"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "profile_selected",
+        "action_by": "U001",
+        "timestamp": "2026-01-28 13:20:15"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "Profile Selection",
+        "action_by": "U001",
+        "timestamp": "2026-01-28 13:20:15"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-28 13:21:18"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "Offer Letter",
+        "action_by": "U001",
+        "timestamp": "2026-01-28 13:21:18"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "Document Verification",
+        "action_by": "U001",
+        "timestamp": "2026-01-28 13:22:02"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "interview_schedule",
+        "action_by": "U002",
+        "timestamp": "2026-01-28 13:23:32"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "1st Round Interview",
+        "action_by": "U002",
+        "timestamp": "2026-01-28 13:23:32"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: profile_selected",
+        "action_by": "U001",
+        "timestamp": "2026-02-07 07:58:49"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-02-08 09:02:06"
     }
 ]

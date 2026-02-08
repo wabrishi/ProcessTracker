@@ -55,8 +55,13 @@ function renderTemplate(string $templateName, array $replacements): string {
         return 'Template not found';
     }
     $content = file_get_contents($templatePath);
+    
+    // First, handle double-brace placeholders (legacy format) - convert to single brace
+    $content = preg_replace('/\{\{([A-Z_]+)\}\}/i', '{$1}', $content);
+    
+    // Now replace all placeholders
     foreach ($replacements as $key => $value) {
-        $content = str_replace('{{' . $key . '}}', $value, $content);
+        $content = str_replace('{' . strtoupper($key) . '}', $value, $content);
     }
     return $content;
 }

@@ -204,6 +204,104 @@ function getStepFormFields(int $stepNumber): array {
 }
 
 /**
+ * Get form HTML for target step (used for dynamic form field loading)
+ */
+function getTargetStepFormHtml(int $targetStep, array $candidate = [], string $formId = 'stepForm'): string {
+    $stepConfig = getStepConfig($targetStep);
+    if (!$stepConfig || !$stepConfig['has_form']) {
+        return '';
+    }
+    
+    $formFields = $stepConfig['form_fields'] ?? [];
+    $html = '<div id="targetStepFields" class="target-step-fields">';
+    $html .= '<h4>📋 Step ' . $targetStep . ': ' . htmlspecialchars($stepConfig['name']) . '</h4>';
+    
+    if (!empty($stepConfig['description'])) {
+        $html .= '<p class="step-description">' . htmlspecialchars($stepConfig['description']) . '</p>';
+    }
+    
+    foreach ($formFields as $field) {
+        $name = $field['name'];
+        $label = $field['label'] ?? $name;
+        $type = $field['type'] ?? 'text';
+        $required = $field['required'] ?? false;
+        $value = $candidate[$name] ?? $field['default'] ?? '';
+        $rows = $field['rows'] ?? 3;
+        
+        $html .= '<div class="form-group">';
+        $html .= '<label>' . htmlspecialchars($label);
+        if ($required) {
+            $html .= ' <span class="required">*</span>';
+        }
+        $html .= '</label>';
+        
+        switch ($type) {
+            case 'text':
+                $html .= '<input type="text" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'email':
+                $html .= '<input type="email" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'date':
+                $html .= '<input type="date" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'time':
+                $html .= '<input type="time" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'textarea':
+                $html .= '<textarea name="' . htmlspecialchars($name) . '" rows="' . $rows . '"';
+                if ($required) $html .= ' required';
+                $html .= '>' . htmlspecialchars($value) . '</textarea>';
+                break;
+                
+            case 'select':
+                $html .= '<select name="' . htmlspecialchars($name) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                foreach ($field['options'] as $option) {
+                    $optValue = is_array($option) ? ($option['value'] ?? '') : $option;
+                    $optLabel = is_array($option) ? ($option['label'] ?? $optValue) : $option;
+                    $selected = ($value == $optValue) ? ' selected' : '';
+                    $html .= '<option value="' . htmlspecialchars($optValue) . '"' . $selected . '>' . htmlspecialchars($optLabel) . '</option>';
+                }
+                $html .= '</select>';
+                break;
+                
+            case 'file':
+                $html .= '<input type="file" name="' . htmlspecialchars($name) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+        }
+        
+        $html .= '</div>';
+    }
+    
+    // Add note about email
+    if ($stepConfig['send_email'] && $stepConfig['email_template']) {
+        $html .= '<div class="email-notice">';
+        $html .= '📧 This will send an email notification to the candidate using the "' . htmlspecialchars($stepConfig['email_template']) . '" template.';
+        $html .= '</div>';
+    }
+    
+    $html .= '</div>';
+    
+    return $html;
+}
+
+/**
  * Check if step sends email
  */
 function stepSendsEmail(int $stepNumber): bool {

@@ -39,6 +39,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Cannot move to step ' . $step;
         }
     }
+    if (isset($_POST['log_call'])) {
+        $result = $_POST['result'] ?? null;
+        $remarks = $_POST['remarks'] ?? '';
+        $candidates = getCandidates();
+        $hr = $_SESSION['user_id'] ?? 'system';
+        
+        if (!$result) {
+            $message = 'Please select call result';
+        } else {
+
+            $callLogEntry = [
+                'timestamp' => date('Y-m-d H:i:s'),
+                'result' => $result,
+                'remarks' => $remarks,
+                'called_by' => $hr
+            ];
+            
+            if (!isset($candidates[$candidateId]['call_logs'])) {
+                $candidates[$candidateId]['call_logs'] = [];
+            }
+            
+            array_unshift($candidates[$candidateId]['call_logs'], $callLogEntry);
+            $candidates[$candidateId]['last_call'] = $callLogEntry['timestamp'];
+            $candidates[$candidateId]['call_result'] = $result;
+            
+            if (saveCandidates($candidates)) {
+                $message = 'Call logged successfully';
+                logRecruitmentAction($candidateId, 'Call: ' . $result, $hr);
+                $candidate = getCandidate($candidateId);
+            } else {
+                $message = 'Failed to save call log';
+            }
+        }
+    }
 }
 
 $candidates = getCandidates();
@@ -107,6 +141,13 @@ foreach ($candidates as $cand) {
                     <a href="index.php?page=hr&menu=candidates" class="menu-link <?php echo $activeMenu === 'candidates' ? 'active' : ''; ?>">
                         <span class="icon">👥</span>
                         My Candidates
+                    </a>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="index.php?page=hr&menu=send_mail" class="menu-link <?php echo $activeMenu === 'send_mail' ? 'active' : ''; ?>">
+                        <span class="icon">📧</span>
+                        Send Mail
                     </a>
                 </li>
                 
@@ -377,21 +418,50 @@ foreach ($candidates as $cand) {
                     </table>
                 </div>
             <?php endif; ?>
+
+            <!-- Send Mail View -->
+            <?php if ($activeMenu === 'send_mail'): ?>
+                <?php 
+                // Include the send mail page
+                ob_start();
+                include __DIR__ . '/send_mail.php';
+                $sendMailContent = ob_get_clean();
+                echo $sendMailContent;
+                ?>
+            <?php endif; ?>
         </main>
     </div>
 
     <!-- Call Modal -->
     <div class="modal-overlay" id="callModal">
-        <div class="modal">
-            <h3>📞 Log Call</h3>
+        <div class="modal call-modal">
+            <h3>📞 Log Call Result</h3>
             <form id="callForm">
                 <input type="hidden" name="id" id="callCandidateId">
                 <div class="form-group">
                     <label>Call Result *</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="result" value="interested" checked> ✓ Interested</label>
-                        <label><input type="radio" name="result" value="not_interested"> ✗ Not Interested</label>
-                        <label><input type="radio" name="result" value="not_pick"> 📵 Not Pick</label>
+                    <div class="call-result-options">
+                        <label class="call-result-option interested">
+                            <input type="radio" name="result" value="interested">
+                            <div class="option-content">
+                                <span class="option-icon">✓</span>
+                                <span class="option-label">Interested</span>
+                            </div>
+                        </label>
+                        <label class="call-result-option not-interested">
+                            <input type="radio" name="result" value="not_interested">
+                            <div class="option-content">
+                                <span class="option-icon">✗</span>
+                                <span class="option-label">Not Interested</span>
+                            </div>
+                        </label>
+                        <label class="call-result-option not-pick">
+                            <input type="radio" name="result" value="not_pick">
+                            <div class="option-content">
+                                <span class="option-icon">📵</span>
+                                <span class="option-label">Not Pick</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
                 <div class="form-group">
@@ -416,6 +486,41 @@ foreach ($candidates as $cand) {
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('sidebarOverlay').classList.toggle('open');
+        }
+
+        // Notification function
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = 'notification notification-' + type;
+            notification.innerHTML = '<span>' + message + '</span><button onclick="this.parentElement.remove()">×</button>';
+            
+            // Style the notification
+            notification.style.cssText = 'position: fixed; top: 20px; right: 20px; padding: 15px 20px; border-radius: 8px; color: #fff; font-weight: 500; z-index: 10000; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s ease;';
+            
+            if (type === 'success') {
+                notification.style.background = '#27ae60';
+            } else if (type === 'error') {
+                notification.style.background = '#e74c3c';
+            } else {
+                notification.style.background = '#3498db';
+            }
+            
+            // Add animation keyframes
+            if (!document.getElementById('notificationStyles')) {
+                const style = document.createElement('style');
+                style.id = 'notificationStyles';
+                style.textContent = '@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } } @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }';
+                document.head.appendChild(style);
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
 
         // Call modal functions
@@ -581,33 +686,61 @@ foreach ($candidates as $cand) {
                     e.preventDefault();
                     
                     const formData = new FormData(callForm);
+                    formData.append("log_call", "1"); // IMPORTANT
                     const candidateId = formData.get('id');
                     const result = formData.get('result');
                     const remarks = formData.get('remarks');
                     
+                    // Validate form
+                    if (!candidateId || !result) {
+                        showNotification('Please select a call result', 'error');
+                        return;
+                    }
+                    
                     document.getElementById('loadingOverlay').style.display = 'flex';
                     
-                    fetch('update_call.php', {
+                    fetch('hr/update_call.php', {
                         method: 'POST',
                         body: formData
                     })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Server returned error: ' + response.status);
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         document.getElementById('loadingOverlay').style.display = 'none';
                         
                         if (data.success) {
+                            // Clear form
+                            callForm.reset();
                             closeCallModal();
+                            
+                            // Show success message
+                            showNotification('Call logged successfully!', 'success');
+                            
+                            // Reload page after short delay to update UI
                             setTimeout(() => {
                                 window.location.reload();
-                            }, 500);
+                            }, 1000);
                         } else {
-                            alert('Error: ' + (data.message || 'Failed to save call log'));
+                            // Show detailed error message
+                            const errorMsg = data.message || 'Failed to save call log';
+                            const debugInfo = data.debug ? '\n\nDebug: ' + JSON.stringify(data.debug, null, 2) : '';
+                            console.error('Save error:', data);
+                            
+                            if (data.debug && data.debug.file_writable === false) {
+                                showNotification('Permission Error: Database file is not writable', 'error');
+                            } else {
+                                showNotification('Error: ' + errorMsg, 'error');
+                            }
                         }
                     })
                     .catch(err => {
                         document.getElementById('loadingOverlay').style.display = 'none';
                         console.error('Error:', err);
-                        alert('Request failed. Please try again.');
+                        showNotification('Request failed: ' + err.message, 'error');
                     });
                 });
             }
@@ -927,6 +1060,116 @@ foreach ($candidates as $cand) {
             .charts-row {
                 grid-template-columns: 1fr;
             }
+        }
+        
+        /* Call Modal Styles */
+        .call-modal {
+            max-width: 450px;
+        }
+        
+        .call-result-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        
+        .call-result-option {
+            display: block;
+            padding: 14px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: #fff;
+        }
+        
+        .call-result-option:hover {
+            border-color: #3498db;
+            background: #f8f9fa;
+        }
+        
+        .call-result-option input[type="radio"] {
+            display: none;
+        }
+        
+        .call-result-option input[type="radio"]:checked + .option-content {
+            color: inherit;
+        }
+        
+        .call-result-option.interested {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+        
+        .call-result-option.interested:hover {
+            border-color: #219a52;
+            background: #e6ffed;
+        }
+        
+        .call-result-option.interested input[type="radio"]:checked + .option-content {
+            color: #1e7e34;
+        }
+        
+        .call-result-option.not-interested {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+        
+        .call-result-option.not-interested:hover {
+            border-color: #c0392b;
+            background: #ffe6e6;
+        }
+        
+        .call-result-option.not-interested input[type="radio"]:checked + .option-content {
+            color: #c0392b;
+        }
+        
+        .call-result-option.not-pick {
+            border-color: #f39c12;
+            background: #fffbf0;
+        }
+        
+        .call-result-option.not-pick:hover {
+            border-color: #d68910;
+            background: #fff3cd;
+        }
+        
+        .call-result-option.not-pick input[type="radio"]:checked + .option-content {
+            color: #d68910;
+        }
+        
+        .call-result-option input[type="radio"]:checked + .option-content .option-icon {
+            transform: scale(1.1);
+        }
+        
+        .option-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #5a6c7d;
+        }
+        
+        .option-icon {
+            font-size: 1.4em;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.7);
+            border-radius: 8px;
+            transition: transform 0.2s ease;
+        }
+        
+        .option-label {
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+        
+        /* Modal overlay fix */
+        .modal-overlay {
+            backdrop-filter: blur(3px);
         }
     </style>
 </body>

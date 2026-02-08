@@ -1,21 +1,39 @@
 <?php
-// Candidate Workflow Logic
+// Candidate Workflow Logic - Dynamic Workflow System
 
 include_once 'helpers.php';
 include_once 'upload.php';
 include_once 'mailer.php';
+include_once 'workflow.php';
 
-const STEPS = [
-    1 => 'Profile Selection',
-    2 => 'Confirmation Letter OR Cancellation Letter',
-    3 => 'Document Verification',
-    4 => '1st Round Interview – Schedule',
-    5 => '1st Round Interview – Result',
-    6 => '2nd Round Interview – Schedule',
-    7 => '2nd Round Interview – Result'
-];
+/**
+ * Backward compatibility - Get STEPS constant as array
+ * This maintains compatibility with existing code
+ */
+// Note: getStepsArray() is defined in workflow.php
+
+// Define STEPS constant for backward compatibility
+if (!defined('STEPS')) {
+    // Get steps from workflow config and create constant array
+    $steps = getWorkflowSteps();
+    $stepsArray = [];
+    foreach ($steps as $step) {
+        $stepsArray[$step['step_number']] = $step['name'];
+    }
+    define('STEPS', $stepsArray);
+}
 
 function generateCandidateId(): string {
+    // Try to use sequence-based ID generation first
+    include_once __DIR__ . '/sequence.php';
+    $sequenceId = generateCandidateIdFromSequence();
+    
+    // If we got a sequence-based ID, use it
+    if (!empty($sequenceId)) {
+        return $sequenceId;
+    }
+    
+    // Fallback to random ID if no active sequence
     return 'CAND' . str_pad(mt_rand(1, 999), 3, '0', STR_PAD_LEFT);
 }
 
@@ -49,18 +67,22 @@ function createCandidate(array $data): ?array {
         'status' => 'IN_PROGRESS',
         'documents' => [],
         'interviews' => [],
-        'resume' => $resumeFile
+        'resume' => $resumeFile,
+        'step_data' => []
     ];
 
     saveCandidates($candidates);
     logRecruitmentAction($id, 'Profile Created', $_SESSION['user_id'] ?? 'system');
 
-    // Send profile selected email with resume attachment if available
-    $attachments = [];
-    if ($resumeFile) {
-        $attachments[] = __DIR__ . '/../uploads/resumes/' . $resumeFile;
+    // Send profile selected email if configured
+    $step1Config = getStepConfig(1);
+    if ($step1Config && $step1Config['send_email'] && $step1Config['email_template']) {
+        $attachments = [];
+        if ($resumeFile) {
+            $attachments[] = __DIR__ . '/../uploads/resumes/' . $resumeFile;
+        }
+        sendTemplatedMail($id, $step1Config['email_template'], buildEmailVariables($candidates[$id]), $attachments);
     }
-    sendTemplatedMail($id, 'profile_selected', [], $attachments);
 
     return ['id' => $id, 'message' => 'Candidate created successfully'];
 }
@@ -71,147 +93,250 @@ function getCandidate(string $id): ?array {
 }
 
 function canMoveToStep(array $candidate, int $targetStep): bool {
-    return $candidate['current_step'] + 1 === $targetStep && $candidate['status'] === 'IN_PROGRESS';
+    $currentStep = $candidate['current_step'] ?? 1;
+    $settings = getWorkflowConfig()['settings'] ?? [];
+    
+    // Check if target is the next step (or any step if skipping allowed)
+    if (!$settings['allow_skip_steps']) {
+        if ($targetStep != $currentStep + 1) {
+            return false;
+        }
+    }
+    
+    // Can only advance if in progress
+    if ($candidate['status'] !== 'IN_PROGRESS') {
+        return false;
+    }
+    
+    // Target step must exist
+    return getStepConfig($targetStep) !== null;
 }
 
 function moveToStep(string $id, int $step, array $data = []): bool {
-    $candidates = getCandidates();
-    if (!isset($candidates[$id]) || !canMoveToStep($candidates[$id], $step)) {
-        return false;
-    }
-
-    $candidates[$id]['current_step'] = $step;
-
-    // Handle step-specific logic
-    switch ($step) {
-        case 2:
-            // Confirmation or Cancellation
-            $choice = $data['choice']; // 'confirmation' or 'cancellation'
-            $attachments = [];
-            $tempPdf = null;
-            if (isset($_FILES['letter']) && $_FILES['letter']['error'] !== UPLOAD_ERR_NO_FILE) {
-                $uploadedLetter = uploadLetter($_FILES['letter']);
-                if ($uploadedLetter) {
-                    $attachments[] = $uploadedLetter;
-                }
-            }
-            if ($choice === 'confirmation') {
-                if (!function_exists('generateConfirmationPDF')) {
-                    error_log('generateConfirmationPDF function not found');
-                    $tempPdf = null;
-                } else {
-                    $tempPdf = generateConfirmationPDF($candidates[$id]);
-                }
-                if ($tempPdf) {
-                    $attachments[] = $tempPdf;
-                }
-            }
-            $attachmentPaths = [];
-            foreach ($attachments as $att) {
-                if (strpos($att, DIRECTORY_SEPARATOR) !== false) {
-                    // full path, like temp PDF
-                    $attachmentPaths[] = $att;
-                } else {
-                    // filename, like uploaded letter
-                    $attachmentPaths[] = __DIR__ . '/../uploads/letters/' . $att;
-                }
-            }
-            sendTemplatedMail($id, $choice, [], $attachmentPaths);
-            error_log("Sent $choice email to candidate $id");
-            if ($tempPdf) @unlink($tempPdf);
-            if ($choice === 'cancellation') {
-                $candidates[$id]['status'] = 'CANCELLED';
-            }
-            break;
-        case 3:
-            // Document Verification
-            $docs = [];
-            if (isset($_FILES['documents'])) {
-                foreach ($_FILES['documents']['name'] as $key => $name) {
-                    if ($_FILES['documents']['error'][$key] === UPLOAD_ERR_OK) {
-                        $file = [
-                            'name' => $_FILES['documents']['name'][$key],
-                            'type' => $_FILES['documents']['type'][$key],
-                            'tmp_name' => $_FILES['documents']['tmp_name'][$key],
-                            'error' => $_FILES['documents']['error'][$key],
-                            'size' => $_FILES['documents']['size'][$key]
-                        ];
-                        $uploaded = uploadDocument($file);
-                        if ($uploaded) {
-                            $docs[] = $uploaded;
-                        }
-                    }
-                }
-            }
-            $candidates[$id]['documents'] = array_merge($candidates[$id]['documents'], $docs);
-            $candidates[$id]['verification_status'] = $data['verification'] ?? 'Pending';
-            break;
-        case 4:
-            // Schedule 1st interview
-            $candidates[$id]['interviews']['1st'] = [
-                'date' => $data['date'],
-                'time' => $data['time'],
-                'mode' => $data['mode'],
-                'interviewer' => $data['interviewer']
-            ];
-            sendTemplatedMail($id, 'interview_schedule', [
-                'date' => $data['date'],
-                'time' => $data['time'],
-                'mode' => $data['mode'],
-                'interviewer' => $data['interviewer']
-            ]);
-            error_log("Sent interview_schedule email for step 4 to candidate $id");
-            break;
-        case 5:
-            // 1st interview result
-            $result = $data['result']; // 'pass' or 'fail'
-            $internalResult = $result === 'pass' ? 'selected' : 'rejected';
-            $candidates[$id]['interviews']['1st']['result'] = $internalResult;
-            $candidates[$id]['interviews']['1st']['remarks'] = $data['remarks'];
-            if ($internalResult === 'rejected') {
-                $candidates[$id]['status'] = 'CANCELLED';
-            }
-            // Send result email
-            sendTemplatedMail($id, 'interview_result', [
-                'result' => ucfirst($result),
-                'remarks' => $data['remarks']
-            ]);
-            error_log("Sent interview_result email for step 5 to candidate $id");
-            break;
-        case 6:
-            // Schedule 2nd interview (similar to 4)
-            $candidates[$id]['interviews']['2nd'] = [
-                'date' => $data['date'],
-                'time' => $data['time'],
-                'mode' => $data['mode'],
-                'interviewer' => $data['interviewer']
-            ];
-            sendTemplatedMail($id, 'interview_schedule', [
-                'date' => $data['date'],
-                'time' => $data['time'],
-                'mode' => $data['mode'],
-                'interviewer' => $data['interviewer']
-            ]);
-            error_log("Sent interview_schedule email for step 6 to candidate $id");
-            break;
-        case 7:
-            // 2nd interview result
-            $result = $data['result'];
-            $internalResult = $result === 'pass' ? 'selected' : 'rejected';
-            $candidates[$id]['interviews']['2nd']['result'] = $internalResult;
-            $candidates[$id]['interviews']['2nd']['remarks'] = $data['remarks'];
-            $candidates[$id]['status'] = $internalResult === 'selected' ? 'COMPLETED' : 'CANCELLED';
-            // Send final email
-            sendTemplatedMail($id, 'interview_result', [
-                'result' => ucfirst($result),
-                'remarks' => $data['remarks']
-            ]);
-            error_log("Sent interview_result email for step 7 to candidate $id");
-            break;
-    }
-
-    saveCandidates($candidates);
-    logRecruitmentAction($id, STEPS[$step], $_SESSION['user_id']);
-    return true;
+    return processStepMove($id, $step, $data);
 }
-?>
+
+/**
+ * Get form HTML for a specific step
+ */
+function getStepFormHtml(int $stepNumber, array $candidate = [], string $formId = 'stepForm'): string {
+    $stepConfig = getStepConfig($stepNumber);
+    if (!$stepConfig || !$stepConfig['has_form']) {
+        return '<p class="no-data">No form required for this step</p>';
+    }
+    
+    $formFields = $stepConfig['form_fields'] ?? [];
+    $formType = $stepConfig['form_type'] ?? 'default';
+    $totalSteps = getTotalSteps();
+    $currentStep = $candidate['current_step'] ?? 1;
+    
+    $html = '<form method="post" enctype="multipart/form-data" id="' . $formId . '">';
+    
+    // Step selection dropdown - only show if there are forward steps available
+    $forwardSteps = [];
+    for ($s = $currentStep + 1; $s <= $totalSteps; $s++) {
+        $forwardStepConfig = getStepConfig($s);
+        if ($forwardStepConfig) {
+            $forwardSteps[] = [
+                'step_number' => $s,
+                'name' => $forwardStepConfig['name']
+            ];
+        }
+    }
+    
+    if (!empty($forwardSteps)) {
+        $html .= '<div class="form-group">';
+        $html .= '<label>Select Next Step <span class="required">*</span></label>';
+        $html .= '<select name="step" required>';
+        // Default to next immediate step
+        $defaultStep = $currentStep + 1;
+        $html .= '<option value="' . $defaultStep . '">' . htmlspecialchars(getStepConfig($defaultStep)['name'] ?? 'Step ' . $defaultStep) . '</option>';
+        // Add other forward steps
+        foreach ($forwardSteps as $fs) {
+            if ($fs['step_number'] != $defaultStep) {
+                $html .= '<option value="' . $fs['step_number'] . '">Step ' . $fs['step_number'] . ': ' . htmlspecialchars($fs['name']) . '</option>';
+            }
+        }
+        $html .= '</select>';
+        $html .= '</div>';
+    } else {
+        $html .= '<input type="hidden" name="step" value="' . $currentStep . '">';
+    }
+    
+    foreach ($formFields as $field) {
+        $name = $field['name'];
+        $label = $field['label'] ?? $name;
+        $type = $field['type'] ?? 'text';
+        $required = $field['required'] ?? false;
+        $value = $candidate[$name] ?? $field['default'] ?? '';
+        $rows = $field['rows'] ?? 3;
+        $accept = $field['accept'] ?? '';
+        
+        $html .= '<div class="form-group">';
+        $html .= '<label>' . htmlspecialchars($label);
+        if ($required) {
+            $html .= ' <span class="required">*</span>';
+        }
+        $html .= '</label>';
+        
+        switch ($type) {
+            case 'text':
+                $html .= '<input type="text" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'email':
+                $html .= '<input type="email" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'date':
+                $html .= '<input type="date" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'time':
+                $html .= '<input type="time" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'textarea':
+                $html .= '<textarea name="' . htmlspecialchars($name) . '" rows="' . $rows . '"';
+                if ($required) $html .= ' required';
+                $html .= '>' . htmlspecialchars($value) . '</textarea>';
+                break;
+                
+            case 'select':
+                $html .= '<select name="' . htmlspecialchars($name) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                foreach ($field['options'] as $option) {
+                    $optValue = $option['value'] ?? '';
+                    $optLabel = $option['label'] ?? $optValue;
+                    $selected = ($value == $optValue) ? ' selected' : '';
+                    $html .= '<option value="' . htmlspecialchars($optValue) . '"' . $selected . '>' . htmlspecialchars($optLabel) . '</option>';
+                }
+                $html .= '</select>';
+                break;
+                
+            case 'file':
+                $html .= '<input type="file" name="' . htmlspecialchars($name) . '"';
+                if ($accept) $html .= ' accept="' . htmlspecialchars($accept) . '"';
+                if ($required) $html .= ' required';
+                $html .= '>';
+                break;
+                
+            case 'file_multiple':
+                $html .= '<input type="file" name="' . htmlspecialchars($name) . '[]"';
+                if ($accept) $html .= ' accept="' . htmlspecialchars($accept) . '"';
+                $html .= ' multiple>';
+                break;
+                
+            case 'radio':
+                foreach ($field['options'] as $option) {
+                    $optValue = $option['value'] ?? '';
+                    $optLabel = $option['label'] ?? $optValue;
+                    $checked = ($value == $optValue) ? ' checked' : '';
+                    $html .= '<label class="radio-label">';
+                    $html .= '<input type="radio" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($optValue) . '"' . $checked;
+                    if ($required && $optValue === $field['options'][0]['value']) {
+                        $html .= ' required';
+                    }
+                    $html .= '> ' . htmlspecialchars($optLabel) . '</label>';
+                }
+                break;
+        }
+        
+        $html .= '</div>';
+    }
+    
+    $html .= '<button type="submit" name="move_step" class="btn btn-primary">✅ Submit</button>';
+    $html .= '</form>';
+    
+    return $html;
+}
+
+/**
+ * Get step navigation buttons
+ */
+function getStepNavigationHtml(array $candidate): string {
+    $currentStep = $candidate['current_step'] ?? 1;
+    $totalSteps = getTotalSteps();
+    $stepConfig = getStepConfig($currentStep);
+    
+    $html = '<div class="step-navigation">';
+    
+    // Previous steps progress
+    $html .= '<div class="step-progress">';
+    $html .= '<span class="step-label">Step ' . $currentStep . ' of ' . $totalSteps . ': ' . htmlspecialchars($stepConfig['name'] ?? '') . '</span>';
+    
+    // Progress bar
+    $progress = (($currentStep - 1) / ($totalSteps - 1)) * 100;
+    $html .= '<div class="progress-bar">';
+    $html .= '<div class="progress-fill" style="width: ' . $progress . '%"></div>';
+    $html .= '</div>';
+    $html .= '</div>';
+    
+    // Cancel button if allowed
+    if ($stepConfig['can_cancel'] ?? false) {
+        $html .= '<form method="post" style="display:inline;">';
+        $html .= '<input type="hidden" name="step" value="' . $currentStep . '">';
+        $html .= '<input type="hidden" name="choice" value="cancellation">';
+        $html .= '<button type="submit" name="cancel_candidate" class="btn btn-danger" onclick="return confirm(\'Cancel this candidate?\')">❌ Cancel Candidate</button>';
+        $html .= '</form>';
+    }
+    
+    $html .= '</div>';
+    
+    return $html;
+}
+
+/**
+ * Render workflow steps visualization
+ */
+function renderWorkflowSteps(array $candidate = [], bool $showActions = false): string {
+    $currentStep = $candidate['current_step'] ?? 1;
+    $steps = getWorkflowSteps();
+    
+    $html = '<div class="workflow-steps">';
+    
+    foreach ($steps as $index => $step) {
+        $stepNum = $step['step_number'];
+        $isCompleted = $currentStep > $stepNum;
+        $isCurrent = $currentStep == $stepNum;
+        
+        $class = 'workflow-step';
+        if ($isCompleted) $class .= ' completed';
+        if ($isCurrent) $class .= ' current';
+        
+        $html .= '<div class="' . $class . '">';
+        $html .= '<div class="step-indicator">';
+        if ($isCompleted) {
+            $html .= '✓';
+        } else {
+            $html .= $stepNum;
+        }
+        $html .= '</div>';
+        $html .= '<div class="step-info">';
+        $html .= '<div class="step-name">' . htmlspecialchars($step['name']) . '</div>';
+        if ($step['description'] ?? '') {
+            $html .= '<div class="step-desc">' . htmlspecialchars($step['description']) . '</div>';
+        }
+        $html .= '</div>';
+        
+        if ($showActions && $isCurrent) {
+            $html .= '<span class="current-badge">Current</span>';
+        }
+        
+        $html .= '</div>';
+    }
+    
+    $html .= '</div>';
+    
+    return $html;
+}
+

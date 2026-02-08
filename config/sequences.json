@@ -5,7 +5,7 @@
             "name": "KRS Candidates",
             "prefix": "KRS-",
             "padding": 4,
-            "current_value": 5,
+            "current_value": 7,
             "increment": 1,
             "active": true,
             "description": "KRS candidate ID sequence - generates IDs like KRS-0001, KRS-0002, etc."

@@ -1,13 +1,12 @@
 <?php
+// Basic router - MUST start session at the very beginning
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 error_log("Index.php started");
 session_start();
 error_log("Session started");
-include_once 'includes/helpers.php';
-error_log("Helpers included");
 
-// Basic router
+// Get page from GET or default to login
 $page = $_GET['page'] ?? 'login';
 error_log("Page: $page");
 

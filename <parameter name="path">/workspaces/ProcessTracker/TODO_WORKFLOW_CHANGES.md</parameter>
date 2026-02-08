@@ -1,0 +1,40 @@
+<parameter name="content"># Workflow Changes - TODO List
+
+## Objective
+Change the flow to use "Last Stage" concept instead of "current stage":
+1. When selecting next stage and submitting, the next stage becomes the "last stage"
+2. Send email for the last stage (completed stage), not the next stage
+3. Add a button to resend mail for the last stage
+
+## Implementation Plan
+
+### Step 1: Update includes/workflow.php
+- [ ] Modify `processStepMove()` to track `last_stage_completed` and send email for that stage
+- [ ] Add `resendStageMail()` function to resend email for a specific stage
+- [ ] Add `getLastStageConfig()` function
+- [ ] Add `getLastStageEmailSent()` function to track when email was last sent
+
+### Step 2: Update includes/candidate.php
+- [ ] Update `getStepFormHtml()` to show "Last Stage Completed" label
+- [ ] Add hidden field for `last_stage_completed` tracking
+- [ ] Update `renderWorkflowSteps()` to show "Last Stage" vs "Next Stage"
+
+### Step 3: Update hr/candidate_details.php
+- [ ] Add "Resend Mail" button for last completed stage
+- [ ] Handle `resend_mail` action in POST handling
+- [ ] Update UI labels from "Current Step" to "Last Stage / Next Stage"
+- [ ] Show last stage email status
+
+### Step 4: Update config/workflow.json (if needed)
+- [ ] No changes needed - configuration remains the same
+
+## Files Modified
+1. `/workspaces/ProcessTracker/includes/workflow.php`
+2. `/workspaces/ProcessTracker/includes/candidate.php`
+3. `/workspaces/ProcessTracker/hr/candidate_details.php`
+
+## Testing
+- [ ] Test step movement with email sending for last stage
+- [ ] Test resend mail button functionality
+- [ ] Verify UI shows correct stage information
+</parameter>

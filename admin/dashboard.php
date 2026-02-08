@@ -256,16 +256,32 @@ $completedCandidates = count(array_filter($candidates, fn($c) => $c['status'] ==
                     </a>
                 </li>
                 
+                <li class="menu-item">
+                    <a href="index.php?page=admin&menu=send_mail" class="menu-link <?php echo $activeMenu === 'send_mail' ? 'active' : ''; ?>">
+                        <span class="icon">📧</span>
+                        Send Mail
+                    </a>
+                </li>
+                
+                <li class="menu-item">
+                    <a href="index.php?page=admin&menu=mail_logs" class="menu-link <?php echo $activeMenu === 'mail_logs' ? 'active' : ''; ?>">
+                        <span class="icon">📋</span>
+                        Mail Logs
+                    </a>
+                </li>
+                
                 <!-- Configuration Submenu -->
                 <li class="menu-item">
-                    <a href="javascript:void(0)" class="menu-link <?php echo in_array($activeMenu, ['smtp', 'templates']) ? 'active expanded' : ''; ?>" onclick="toggleSubmenu('config')">
+                    <a href="javascript:void(0)" class="menu-link <?php echo in_array($activeMenu, ['smtp', 'templates', 'workflow', 'sequences']) ? 'active expanded' : ''; ?>" onclick="toggleSubmenu('config')">
                         <span class="icon">⚙️</span>
                         Configuration
                         <span class="arrow">▶</span>
                     </a>
-                    <ul class="submenu <?php echo in_array($activeMenu, ['smtp', 'templates']) ? 'open' : ''; ?>" id="config">
+                    <ul class="submenu <?php echo in_array($activeMenu, ['smtp', 'templates', 'workflow', 'sequences']) ? 'open' : ''; ?>" id="config">
                         <li><a href="index.php?page=admin&menu=smtp" class="submenu-link <?php echo $activeMenu === 'smtp' ? 'active' : ''; ?>">SMTP Config</a></li>
                         <li><a href="index.php?page=admin&menu=templates" class="submenu-link <?php echo $activeMenu === 'templates' ? 'active' : ''; ?>">Mail Templates</a></li>
+                        <li><a href="index.php?page=admin&menu=workflow" class="submenu-link <?php echo $activeMenu === 'workflow' ? 'active' : ''; ?>">Workflow Manager</a></li>
+                        <li><a href="index.php?page=admin&menu=sequences" class="submenu-link <?php echo $activeMenu === 'sequences' ? 'active' : ''; ?>">🔢 Sequence Manager</a></li>
                     </ul>
                 </li>
                 
@@ -704,6 +720,50 @@ $completedCandidates = count(array_filter($candidates, fn($c) => $c['status'] ==
                         <button type="submit" name="update_profile" class="btn btn-primary">💾 Update Profile</button>
                     </form>
                 </div>
+            <?php endif; ?>
+
+            <!-- Workflow Manager View -->
+            <?php if ($activeMenu === 'workflow'): ?>
+                <?php 
+                // Include the workflow manager page
+                ob_start();
+                include __DIR__ . '/workflow_manager.php';
+                $workflowContent = ob_get_clean();
+                echo $workflowContent;
+                ?>
+            <?php endif; ?>
+
+            <!-- Sequence Manager View -->
+            <?php if ($activeMenu === 'sequences'): ?>
+                <?php 
+                // Include the sequence manager page
+                ob_start();
+                include __DIR__ . '/sequence_manager.php';
+                $sequenceContent = ob_get_clean();
+                echo $sequenceContent;
+                ?>
+            <?php endif; ?>
+
+            <!-- Send Mail View -->
+            <?php if ($activeMenu === 'send_mail'): ?>
+                <?php 
+                // Include the send mail page
+                ob_start();
+                include __DIR__ . '/send_mail.php';
+                $sendMailContent = ob_get_clean();
+                echo $sendMailContent;
+                ?>
+            <?php endif; ?>
+
+            <!-- Mail Logs View -->
+            <?php if ($activeMenu === 'mail_logs'): ?>
+                <?php 
+                // Include the mail logs page
+                ob_start();
+                include __DIR__ . '/mail_logs.php';
+                $mailLogsContent = ob_get_clean();
+                echo $mailLogsContent;
+                ?>
             <?php endif; ?>
         </main>
     </div>

@@ -24,7 +24,15 @@ if (!$candidate) {
     exit;
 }
 
+// Get workflow configuration
+$workflowConfig = getWorkflowConfig();
+$settings = $workflowConfig['settings'] ?? [];
+$showStepDescription = $settings['show_step_description'] ?? true;
+
+// Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    
+    // Handle call logging
     if (isset($_POST['log_call'])) {
         $result = $_POST['result'] ?? null;
         $remarks = $_POST['remarks'] ?? '';
@@ -57,16 +65,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message = 'Failed to save call log';
             }
         }
-    } elseif (isset($_POST['move_step'])) {
+    }
+    
+    // Handle step movement
+    elseif (isset($_POST['move_step'])) {
         $step = (int)$_POST['step'];
         $data = $_POST;
+        
+        // Remove form-specific fields
+        unset($data['move_step'], $data['step']);
+        
         if (moveToStep($candidateId, $step, $data)) {
             $message = 'Moved to step ' . $step . ' successfully';
             $candidate = getCandidate($candidateId);
         } else {
             $message = 'Cannot move to step ' . $step;
         }
-    } elseif (isset($_POST['upload_document'])) {
+    }
+    
+    // Handle candidate cancellation
+    elseif (isset($_POST['cancel_candidate'])) {
+        $candidates = getCandidates();
+        if (isset($candidates[$candidateId])) {
+            $candidates[$candidateId]['status'] = 'CANCELLED';
+            if (saveCandidates($candidates)) {
+                $message = 'Candidate cancelled';
+                logRecruitmentAction($candidateId, 'Cancelled', $currentUserId ?? 'system');
+                $candidate = getCandidate($candidateId);
+            }
+        }
+    }
+    
+    // Handle document upload
+    elseif (isset($_POST['upload_document'])) {
         if (isset($_FILES['document']) && $_FILES['document']['error'] !== UPLOAD_ERR_NO_FILE) {
             $uploadedDoc = uploadDocument($_FILES['document']);
             if ($uploadedDoc) {
@@ -108,6 +139,12 @@ if (isset($_GET['delete_doc'])) {
     header('Location: index.php?page=candidate_details&id=' . $candidateId);
     exit;
 }
+
+// Get current step configuration
+$currentStep = $candidate['current_step'] ?? 1;
+$stepConfig = getStepConfig($currentStep);
+$totalSteps = getTotalSteps();
+$nextStep = getNextStepNumber($candidate);
 ?>
 <!DOCTYPE html>
 <html>
@@ -150,6 +187,12 @@ if (isset($_GET['delete_doc'])) {
                     <a href="index.php?page=admin&menu=candidates" class="menu-link active">
                         <span class="icon">📝</span>
                         All Candidates
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="index.php?page=admin&menu=workflow" class="menu-link">
+                        <span class="icon">🔄</span>
+                        Workflow Manager
                     </a>
                 </li>
                 <li class="menu-item">
@@ -212,10 +255,29 @@ if (isset($_GET['delete_doc'])) {
             </div>
             
             <?php if ($message): ?>
-                <div class="<?php echo strpos($message, 'successfully') !== false ? 'message' : 'error'; ?>">
+                <div class="<?php echo strpos($message, 'successfully') !== false || strpos($message, 'cancelled') !== false ? 'message' : 'error'; ?>">
                     <?php echo $message; ?>
                 </div>
             <?php endif; ?>
+
+            <!-- Workflow Progress -->
+            <div class="content-card">
+                <h2>🔄 Recruitment Progress</h2>
+                <?php echo renderWorkflowSteps($candidate, true); ?>
+                
+                <?php if ($candidate['status'] === 'IN_PROGRESS'): ?>
+                    <div class="current-step-info">
+                        <h3>Current Step: <?php echo $currentStep; ?> - <?php echo htmlspecialchars($stepConfig['name'] ?? 'Step ' . $currentStep); ?></h3>
+                        <?php if ($showStepDescription && !empty($stepConfig['description'])): ?>
+                            <p><?php echo htmlspecialchars($stepConfig['description']); ?></p>
+                        <?php endif; ?>
+                    </div>
+                <?php else: ?>
+                    <p class="<?php echo $candidate['status'] === 'COMPLETED' ? 'success-text' : 'error-text'; ?>">
+                        Recruitment process is <?php echo strtolower($candidate['status']); ?>.
+                    </p>
+                <?php endif; ?>
+            </div>
 
             <!-- Basic Information -->
             <div class="content-card">
@@ -243,7 +305,7 @@ if (isset($_GET['delete_doc'])) {
                     </div>
                     <div class="info-item">
                         <label>Current Step</label>
-                        <div><?php echo $candidate['current_step'] . ' - ' . STEPS[$candidate['current_step']]; ?></div>
+                        <div><?php echo $currentStep . ' - ' . htmlspecialchars($stepConfig['name'] ?? ''); ?></div>
                     </div>
                 </div>
             </div>
@@ -360,100 +422,35 @@ if (isset($_GET['delete_doc'])) {
             </div>
             <?php endif; ?>
 
-            <!-- Next Action Section -->
-            <?php if ($candidate['status'] === 'IN_PROGRESS'): ?>
+            <!-- Current Step Action Section -->
+            <?php if ($candidate['status'] === 'IN_PROGRESS' && $stepConfig): ?>
             <div class="content-card action-card">
-                <h2>🎯 Next Action: Step <?php echo $candidate['current_step'] + 1; ?> - <?php echo STEPS[$candidate['current_step'] + 1] ?? 'Completed'; ?></h2>
+                <h2>🎯 <?php echo htmlspecialchars($stepConfig['name']); ?></h2>
+                <?php if ($showStepDescription && !empty($stepConfig['description'])): ?>
+                    <p><?php echo htmlspecialchars($stepConfig['description']); ?></p>
+                <?php endif; ?>
                 
-                <?php if ($candidate['current_step'] === 1): ?>
-                    <p>Review the candidate profile above. Once confirmed, start the process.</p>
-                    <form method="post">
-                        <input type="hidden" name="candidate_id" value="<?php echo $candidateId; ?>">
-                        <input type="hidden" name="step" value="2">
-                        <button type="submit" name="move_step" class="btn btn-primary">▶️ Start Process - Move to Step 2</button>
-                    </form>
-                
-                <?php elseif ($candidate['current_step'] > 1 && $candidate['current_step'] < 7): ?>
-                    <?php $nextStep = $candidate['current_step'] + 1; ?>
-                    <form method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="candidate_id" value="<?php echo $candidateId; ?>">
-                        <input type="hidden" name="step" value="<?php echo $nextStep; ?>">
-                        
-                        <?php if ($nextStep == 2): ?>
-                            <div class="form-group">
-                                <label>Action *</label>
-                                <div class="radio-group">
-                                    <label><input type="radio" name="choice" value="confirmation" required> Send Confirmation</label>
-                                    <label><input type="radio" name="choice" value="cancellation"> Send Cancellation</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label>Letter (optional)</label>
-                                <input type="file" name="letter">
-                            </div>
-                        <?php elseif ($nextStep == 3): ?>
-                            <div class="form-group">
-                                <label>Additional Documents</label>
-                                <input type="file" name="documents[]" multiple>
-                            </div>
-                            <div class="form-group">
-                                <label>Verification Status</label>
-                                <select name="verification">
-                                    <option value="Pending">Pending</option>
-                                    <option value="Verified">Verified</option>
-                                    <option value="Rejected">Rejected</option>
-                                </select>
-                            </div>
-                        <?php elseif ($nextStep == 4 || $nextStep == 6): ?>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Interview Date *</label>
-                                    <input type="date" name="date" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Interview Time *</label>
-                                    <input type="time" name="time" required>
-                                </div>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label>Mode *</label>
-                                    <select name="mode">
-                                        <option value="Online">Online</option>
-                                        <option value="Offline">Offline</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Interviewer *</label>
-                                    <input type="text" name="interviewer" required>
-                                </div>
-                            </div>
-                        <?php elseif ($nextStep == 5 || $nextStep == 7): ?>
-                            <div class="form-group">
-                                <label>Interview Result *</label>
-                                <select name="result" required>
-                                    <option value="pass">Pass</option>
-                                    <option value="fail">Fail</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>Remarks *</label>
-                                <textarea name="remarks" rows="3" required></textarea>
-                            </div>
-                        <?php endif; ?>
-                        
-                        <button type="submit" name="move_step" class="btn btn-primary">✅ Submit Action</button>
-                    </form>
+                <?php if ($stepConfig['has_form']): ?>
+                    <?php echo getStepFormHtml($currentStep, $candidate); ?>
                 <?php else: ?>
-                    <p class="success-text">🎉 This candidate's recruitment process is complete!</p>
+                    <form method="post">
+                        <input type="hidden" name="step" value="<?php echo $nextStep ?? ($currentStep + 1); ?>">
+                        <button type="submit" name="move_step" class="btn btn-primary">✅ Proceed to Next Step</button>
+                    </form>
+                <?php endif; ?>
+                
+                <!-- Cancel button if allowed -->
+                <?php if ($stepConfig['can_cancel'] ?? false): ?>
+                    <form method="post" style="margin-top: 15px;">
+                        <input type="hidden" name="step" value="<?php echo $currentStep; ?>">
+                        <button type="submit" name="cancel_candidate" class="btn btn-danger" onclick="return confirm('Are you sure you want to cancel this candidate?');">❌ Cancel Candidate</button>
+                    </form>
                 <?php endif; ?>
             </div>
-            <?php else: ?>
+            <?php elseif ($candidate['status'] === 'COMPLETED'): ?>
             <div class="content-card">
-                <h2>📊 Process Status</h2>
-                <p class="<?php echo $candidate['status'] === 'COMPLETED' ? 'success-text' : 'error-text'; ?>">
-                    This candidate's recruitment process is <?php echo strtolower($candidate['status']); ?>.
-                </p>
+                <h2>🎉 Recruitment Complete</h2>
+                <p class="success-text">Congratulations! This candidate has successfully completed the recruitment process.</p>
             </div>
             <?php endif; ?>
         </main>
@@ -656,6 +653,94 @@ if (isset($_GET['delete_doc'])) {
             gap: 10px;
             flex-wrap: wrap;
             align-items: center;
+        }
+        
+        /* Workflow styles */
+        .workflow-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #ddd;
+        }
+        
+        .workflow-step.completed {
+            background: #e8f6ef;
+            border-left-color: #27ae60;
+        }
+        
+        .workflow-step.current {
+            background: #eef2ff;
+            border-left-color: #667eea;
+        }
+        
+        .step-indicator {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #ddd;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+        
+        .workflow-step.completed .step-indicator {
+            background: #27ae60;
+        }
+        
+        .workflow-step.current .step-indicator {
+            background: #667eea;
+        }
+        
+        .step-info {
+            flex: 1;
+        }
+        
+        .step-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .step-desc {
+            font-size: 0.8em;
+            color: #7f8c8d;
+        }
+        
+        .current-badge {
+            font-size: 0.7em;
+            padding: 2px 8px;
+            background: #667eea;
+            color: #fff;
+            border-radius: 10px;
+        }
+        
+        .current-step-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        
+        .current-step-info h3 {
+            margin: 0 0 8px 0;
+            color: #667eea;
+        }
+        
+        .current-step-info p {
+            margin: 0;
+            color: #7f8c8d;
         }
         
         @media (max-width: 480px) {
