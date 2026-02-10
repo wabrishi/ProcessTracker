@@ -802,5 +802,83 @@
         "step": "Custom Email: offer_letter",
         "action_by": "U001",
         "timestamp": "2026-02-08 09:02:06"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: confirmation",
+        "action_by": "U002",
+        "timestamp": "2026-02-10 10:51:24"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "U002",
+        "timestamp": "2026-02-10 10:52:08"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "test_user",
+        "timestamp": "2026-02-10 10:58:27"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "test_user",
+        "timestamp": "2026-02-10 10:59:17"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "test_user",
+        "timestamp": "2026-02-10 10:59:45"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "test_user",
+        "timestamp": "2026-02-10 11:00:25"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "test",
+        "timestamp": "2026-02-10 11:05:08"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: confirmation",
+        "action_by": "U002",
+        "timestamp": "2026-02-10 11:09:28"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: confirmation",
+        "action_by": "U002",
+        "timestamp": "2026-02-10 11:10:56"
+    },
+    {
+        "candidate_id": "KRS-0006",
+        "step": "Custom Email: confirmation",
+        "action_by": "U001",
+        "timestamp": "2026-02-10 11:15:25"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: confirmation",
+        "action_by": "U001",
+        "timestamp": "2026-02-10 11:18:47"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: offer_letter",
+        "action_by": "U001",
+        "timestamp": "2026-02-10 11:20:13"
+    },
+    {
+        "candidate_id": "KRS-0001",
+        "step": "Custom Email: profile_selected",
+        "action_by": "U001",
+        "timestamp": "2026-02-10 11:45:38"
     }
 ]

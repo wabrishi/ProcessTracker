@@ -37,5 +37,267 @@
         "sent_at": "2026-02-08 09:02:06",
         "status": "SENT",
         "error_message": null
+    },
+    {
+        "id": "ML0003",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "confirmation",
+        "subject": "Confirmation of Employment - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "NAME": "Rishiraj Singh",
+            "POSITION": "Airport Ticket Executive",
+            "JOINING_DATE": "2026-02-09",
+            "SALARY": "200000"
+        },
+        "sent_by": "U002",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 10:51:24",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0004",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "offer_letter",
+        "subject": "Offer Letter - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "NAME": "Rishiraj Singh",
+            "POSITION": "Airport Ticket Executive",
+            "SALARY": "200000",
+            "JOINING_DATE": "2026-02-09",
+            "COMPANY_NAME": "Aakasha Services"
+        },
+        "sent_by": "U002",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 10:52:08",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0005",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "offer_letter",
+        "subject": "Test Offer Letter with PDF",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "SALARY": "50000",
+            "JOINING_DATE": "2026-02-17",
+            "COMPANY_NAME": "Test Company"
+        },
+        "sent_by": "test_user",
+        "sent_by_name": "Test User",
+        "sent_at": "2026-02-10 10:58:27",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0006",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "offer_letter",
+        "subject": "Test Offer Letter with PDF",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "SALARY": "50000",
+            "JOINING_DATE": "2026-02-17",
+            "COMPANY_NAME": "Test Company"
+        },
+        "sent_by": "test_user",
+        "sent_by_name": "Test User",
+        "sent_at": "2026-02-10 10:59:17",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0007",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "offer_letter",
+        "subject": "Test Offer Letter with PDF",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "SALARY": "50000",
+            "JOINING_DATE": "2026-02-17",
+            "COMPANY_NAME": "Test Company"
+        },
+        "sent_by": "test_user",
+        "sent_by_name": "Test User",
+        "sent_at": "2026-02-10 10:59:45",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0008",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "offer_letter",
+        "subject": "Test Offer Letter with PDF",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "SALARY": "50000",
+            "JOINING_DATE": "2026-02-17",
+            "COMPANY_NAME": "Test Company"
+        },
+        "sent_by": "test_user",
+        "sent_by_name": "Test User",
+        "sent_at": "2026-02-10 11:00:25",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0009",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "offer_letter",
+        "subject": "Offer Letter - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "SALARY": "50000",
+            "JOINING_DATE": "2026-03-01"
+        },
+        "sent_by": "test",
+        "sent_by_name": "Test User",
+        "sent_at": "2026-02-10 11:05:08",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0010",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "confirmation",
+        "subject": "Confirmation of Employment - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "NAME": "Rishiraj Singh",
+            "POSITION": "Airport Ticket Executive",
+            "JOINING_DATE": "",
+            "SALARY": "200000"
+        },
+        "sent_by": "U002",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 11:09:28",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0011",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "confirmation",
+        "subject": "Confirmation of Employment - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "NAME": "Rishiraj Singh",
+            "POSITION": "Airport Ticket Executive",
+            "JOINING_DATE": "2026-02-28",
+            "SALARY": "200000"
+        },
+        "sent_by": "U002",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 11:10:56",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0012",
+        "candidate_id": "KRS-0006",
+        "candidate_name": "rishiraj",
+        "candidate_email": "wabrishi@gmail.com",
+        "template_name": "confirmation",
+        "subject": "Confirmation of Employment - Airport Ticket Executive",
+        "to_email": "wabrishi@gmail.com",
+        "placeholders": {
+            "NAME": "rishiraj",
+            "POSITION": "Airport Ticket Executive",
+            "JOINING_DATE": "",
+            "SALARY": ""
+        },
+        "sent_by": "U001",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 11:15:25",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0013",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "confirmation",
+        "subject": "Confirmation of Employment - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "NAME": "Rishiraj Singh",
+            "POSITION": "Airport Ticket Executive",
+            "JOINING_DATE": "",
+            "SALARY": ""
+        },
+        "sent_by": "U001",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 11:18:47",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0014",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "offer_letter",
+        "subject": "Offer Letter - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "NAME": "Rishiraj Singh",
+            "POSITION": "Airport Ticket Executive",
+            "SALARY": "",
+            "JOINING_DATE": "",
+            "COMPANY_NAME": "Aakasha Services"
+        },
+        "sent_by": "U001",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 11:20:13",
+        "status": "SENT",
+        "error_message": null
+    },
+    {
+        "id": "ML0015",
+        "candidate_id": "KRS-0001",
+        "candidate_name": "Rishiraj Singh",
+        "candidate_email": "login.rishiraj@gmail.com",
+        "template_name": "profile_selected",
+        "subject": "Welcome to Our Recruitment Process - Airport Ticket Executive",
+        "to_email": "login.rishiraj@gmail.com",
+        "placeholders": {
+            "NAME": "Rishiraj Singh",
+            "POSITION": "Airport Ticket Executive",
+            "WORK_LOCATION": "Ghaziabad ",
+            "SALARY": "\u20b927,500",
+            "JOB_TYPE": "Permanent",
+            "WORK_HOURS": "8 hours per day",
+            "WORKING_DAYS": "Monday to Friday",
+            "WEEKLY_OFF": "Saturday and Sunday",
+            "FACILITY_DETAILS": "Provided",
+            "HR_CONTACT": "8929630388"
+        },
+        "sent_by": "U001",
+        "sent_by_name": "System",
+        "sent_at": "2026-02-10 11:45:38",
+        "status": "SENT",
+        "error_message": null
     }
 ]

@@ -69,6 +69,82 @@ function getTemplatePlaceholderDefs(string $templateName): array {
     
     // Template-specific placeholders
     $templatePlaceholders = [
+
+        'profile_selected' => [
+            'WORK_LOCATION' => [
+                'key' => 'WORK_LOCATION',
+                'label' => 'Work Location',
+                'type' => 'text',
+                'required' => true,
+                'source' => 'custom'
+            ],
+
+            'SALARY' => [
+                'key' => 'SALARY',
+                'label' => 'Monthly Salary',
+                'type' => 'text',
+                'required' => true,
+                'source' => 'custom',
+                'default' => '₹27,500'
+            ],
+
+            'JOB_TYPE' => [
+                'key' => 'JOB_TYPE',
+                'label' => 'Job Type',
+                'type' => 'select',
+                'options' => ['Permanent', 'Temporary', 'Contract', '60% Permanent'],
+                'required' => true,
+                'source' => 'custom',
+                'default' => 'Permanent'
+            ],
+
+            'WORK_HOURS' => [
+                'key' => 'WORK_HOURS',
+                'label' => 'Working Hours',
+                'type' => 'text',
+                'required' => true,
+                'source' => 'custom',
+                'default' => '8 hours per day'
+            ],
+
+            'WORKING_DAYS' => [
+                'key' => 'WORKING_DAYS',
+                'label' => 'Working Days',
+                'type' => 'text',
+                'required' => true,
+                'source' => 'custom',
+                'default' => 'Monday to Friday'
+            ],
+
+            'WEEKLY_OFF' => [
+                'key' => 'WEEKLY_OFF',
+                'label' => 'Weekly Off Days',
+                'type' => 'text',
+                'required' => false,
+                'source' => 'custom',
+                'default' => 'Saturday and Sunday'
+            ],
+
+            'FACILITY_DETAILS' => [
+                'key' => 'FACILITY_DETAILS',
+                'label' => 'Accommodation & Cab Facility',
+                'type' => 'select',
+                'options' => ['Provided', 'Not Provided'],
+                'required' => true,
+                'source' => 'custom',
+                'default' => 'Provided'
+            ],
+
+            'HR_CONTACT' => [
+                'key' => 'HR_CONTACT',
+                'label' => 'HR Contact Number',
+                'type' => 'text',
+                'required' => true,
+                'source' => 'custom'
+            ]
+
+        ],
+
         'interview_schedule' => [
             'DATE' => [
                 'key' => 'DATE',
@@ -90,14 +166,8 @@ function getTemplatePlaceholderDefs(string $templateName): array {
                 'type' => 'select',
                 'options' => ['In-Person', 'Video Call', 'Phone Call'],
                 'required' => true,
-                'source' => 'custom'
-            ],
-            'INTERVIEWER' => [
-                'key' => 'INTERVIEWER',
-                'label' => 'Interviewer Name',
-                'type' => 'text',
-                'required' => true,
-                'source' => 'custom'
+                'source' => 'custom',
+                'default' => 'Phone Call'
             ]
         ],
         'interview_result' => [
@@ -142,19 +212,13 @@ function getTemplatePlaceholderDefs(string $templateName): array {
             ]
         ],
         'confirmation' => [
-            'JOINING_DATE' => [
-                'key' => 'JOINING_DATE',
-                'label' => 'Joining Date',
-                'type' => 'date',
-                'required' => false,
-                'source' => 'custom'
-            ],
-            'SALARY' => [
-                'key' => 'SALARY',
-                'label' => 'Salary',
+            'COMPANY_NAME' => [
+                'key' => 'COMPANY_NAME',
+                'label' => 'Company Name',
                 'type' => 'text',
                 'required' => false,
-                'source' => 'custom'
+                'source' => 'custom',
+                'default' => 'Aakasha Services'
             ]
         ],
         'cancellation' => [
@@ -162,8 +226,17 @@ function getTemplatePlaceholderDefs(string $templateName): array {
                 'key' => 'REASON',
                 'label' => 'Cancellation Reason',
                 'type' => 'textarea',
-                'required' => false,
-                'source' => 'custom'
+                'required' => true,
+                'source' => 'custom',
+                'default' => 'Document Incomplete'
+            ],
+            'COMPANY_NAME' => [
+                'key' => 'COMPANY_NAME',
+                'label' => 'Company Name',
+                'type' => 'text',
+                'required' => true,
+                'source' => 'custom',
+                'default' => 'Aakasha Services'
             ]
         ]
     ];
@@ -339,6 +412,16 @@ function sendCustomMail(
     
     // Parse template
     $body = parseTemplate($templateName, $replacements);
+    
+    // If this template should include a confirmation/offer PDF, generate and attach it
+    if (in_array($templateName, ['confirmation','offer_letter'])) {
+        $pdfPath = generateConfirmationPDF($candidate, $candidateId);
+        if ($pdfPath) {
+            $attachments[] = $pdfPath;
+        } else {
+            error_log('Failed to generate confirmation PDF for candidate: ' . ($candidate['name'] ?? 'unknown'));
+        }
+    }
     
     // Send email
     $sent = sendMail($candidate['email'], $subject, $body, $attachments);

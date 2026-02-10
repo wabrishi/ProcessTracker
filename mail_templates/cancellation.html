@@ -1,10 +1,79 @@
 <!DOCTYPE html>
-<html>
-<head><title>Cancellation Letter</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cancellation</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #1a237e;
+            margin-bottom: 15px;
+        }
+        p {
+            color: #444444;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .highlight {
+            background-color: #f1f5ff;
+            padding: 15px;
+            border-left: 4px solid #1a237e;
+            margin-top: 15px;
+        }
+        .footer {
+            margin-top: 35px;
+            font-size: 13px;
+            color: #555555;
+        }
+    </style>
+</head>
 <body>
-    <h1>Cancellation Letter</h1>
-    <p>Dear {NAME},</p>
-    <p>Unfortunately, your application for {POSITION} has been cancelled.</p>
-    <p>Best regards,<br>Recruitment Team</p>
+
+<div class="container">
+
+    <h2>Cancellation Letter</h2>
+
+    <p>Dear <strong>{NAME}</strong>,</p>
+
+    <p>
+        We regret to inform you that your application for the position of
+        <strong>{POSITION}</strong> has been cancelled.
+    </p>
+
+    <div class="highlight">
+        <p>
+            <strong>Reason:</strong> {REASON}
+        </p>
+    </div>
+
+    <p>
+        We truly appreciate the time and effort you invested in applying with us.
+        We encourage you to apply for future opportunities that match your profile
+        and wish you every success in your career ahead.
+    </p>
+
+    <div class="footer">
+        <p>
+            Best regards,<br>
+            <strong>Recruitment Team</strong><br>
+            {COMPANY_NAME}
+        </p>
+    </div>
+
+</div>
+
 </body>
 </html>

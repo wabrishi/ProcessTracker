@@ -1,10 +1,101 @@
 <!DOCTYPE html>
-<html>
-<head><title>Confirmation Letter</title></head>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Confirmation Letter</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            color: #1a237e;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #444444;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        .highlight {
+            background-color: #f1f5ff;
+            padding: 15px;
+            border-left: 4px solid #1a237e;
+            margin-top: 15px;
+        }
+
+        .footer {
+            margin-top: 35px;
+            font-size: 13px;
+            color: #555555;
+        }
+
+        .divider {
+            border-top: 1px solid #dddddd;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+
 <body>
-    <h1>Confirmation Letter</h1>
-    <p>Dear {NAME},</p>
-    <p>Your application for {POSITION} has been confirmed. Please proceed to the next step.</p>
-    <p>Best regards,<br>Recruitment Team</p>
+
+    <div class="container">
+
+        <!-- Confirmation Letter -->
+        <h2>Confirmation Letter</h2>
+
+        <p>Dear <strong>{NAME}</strong>,</p>
+
+        <p>
+            We are pleased to inform you that your application for the position of
+            <strong>{POSITION}</strong> has been successfully confirmed.
+        </p>
+        <p>
+            Please find your <strong>Confirmation Letter</strong> below for your review.
+            We kindly request you to go through the contents, print and sign the document,
+            and share a scanned copy with us at your earliest convenience.
+        </p>
+
+        <div class="highlight">
+            <p>
+                If you have any questions or require further clarification, please do not hesitate
+                to reach out.
+            </p>
+        </div>
+
+        <p>
+            We appreciate your interest and look forward to receiving the signed copy soon.
+        </p>
+
+        <div class="footer">
+            <p>
+                Warm regards,<br>
+                <strong>Recruitment Team</strong><br>
+                {COMPANY_NAME}
+            </p>
+        </div>
+
+    </div>
+
 </body>
+
 </html>

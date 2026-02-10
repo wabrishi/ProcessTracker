@@ -35,8 +35,9 @@ function sendMail(string $to, string $subject, string $htmlBody, array $attachme
         foreach ($attachments as $attachment) {
             if (file_exists($attachment)) {
                 $mail->addAttachment($attachment);
+                error_log("✓ Attachment added: $attachment (size: " . filesize($attachment) . " bytes)");
             } else {
-                error_log("Attachment not found: $attachment");
+                error_log("✗ Attachment not found: $attachment");
             }
         }
 
@@ -96,119 +97,94 @@ function sendTemplatedMail(string $candidateId, string $templateName, array $ext
     return $success;
 }
 
-function generateConfirmationPDF(array $candidate): ?string {
-    error_log('generateConfirmationPDF function called for candidate: ' . $candidate['name']);
+function generateConfirmationPDF(array $candidate, string $candidateId = 'unknown'): ?string {
+    error_log('generateConfirmationPDF function called for candidate: ' . $candidate['name'] . ' (ID: ' . $candidateId . ')');
     
-    $templatePath = __DIR__ . '/../pdf_templates/confirmation_template.pdf';
+    // Try to use decompressed version first, fallback to original
+    $templatePath = __DIR__ . '/../pdf_templates/confirmation_uncompressed.pdf';
     if (!file_exists($templatePath)) {
-        error_log('Confirmation PDF template not found at ' . $templatePath);
+        $templatePath = __DIR__ . '/../pdf_templates/confirmation_template.pdf';
+    }
+    
+    if (!file_exists($templatePath)) {
+        error_log('Confirmation PDF template not found');
         return null;
     }
 
-    $tempDir = __DIR__ . '/../temp';
-    if (!is_dir($tempDir)) {
-        mkdir($tempDir, 0755, true);
-    }
-    $tempDir .= DIRECTORY_SEPARATOR . 'pdf_' . uniqid('', true);
-    if (!mkdir($tempDir, 0700, true)) {
-        error_log('Failed to create temp dir for PDF: ' . $tempDir);
-        return null;
+    // Save PDFs permanently to uploads/letters/
+    $lettersDir = __DIR__ . '/../uploads/letters';
+    if (!is_dir($lettersDir)) {
+        if (!mkdir($lettersDir, 0755, true)) {
+            error_log('Failed to create letters dir for PDF: ' . $lettersDir);
+            return null;
+        }
     }
 
-    $outputPdf = $tempDir . DIRECTORY_SEPARATOR . 'confirmation_' . time() . '.pdf';
+    $candidateFileId = $candidateId !== 'unknown' ? $candidateId : substr(md5($candidate['name']), 0, 8);
+    $timestamp = time();
+    $uniquePart = substr(md5(uniqid()), 0, 8);
+    $outputPdf = $lettersDir . DIRECTORY_SEPARATOR . 'offer_' . $candidateFileId . '_' . $timestamp . '_' . $uniquePart . '.pdf';
 
     try {
         error_log('Starting PDF generation for candidate: ' . $candidate['name']);
+        
+        // Use setasign Fpdi to import PDF template
+        require_once __DIR__ . '/../vendor/autoload.php';
+        
         $pdf = new Fpdi();
         $pdf->setPrintHeader(false);
         $pdf->setPrintFooter(false);
-
+        
+        // Try to import the template
+        error_log('Attempting to load template from: ' . $templatePath);
         $pageCount = $pdf->setSourceFile($templatePath);
-        error_log("PDF template has $pageCount pages");
-
-        for ($p = 1; $p <= $pageCount; $p++) {
-            $tplId = $pdf->importPage($p);
-            $pdf->AddPage();
-            $pdf->useTemplate($tplId, 0, 0, 210);
-
-            if ($p === 1) {
-                $pdf->SetFont('helvetica', 'B', 12);
-                $pdf->SetTextColor(0, 0, 0);
-                $pdf->SetXY(30, 180);
-                $pdf->Cell(0, 6, 'Name: ' . $candidate['name'], 0, 1);
-                $pdf->SetXY(30, 200);
-                $pdf->Cell(0, 6, 'Position: ' . $candidate['position'], 0, 1);
-                $pdf->SetXY(30, 220);
-                $pdf->Cell(0, 6, 'Date: ' . date('d/m/Y'), 0, 1);
+        error_log("Template PDF has $pageCount pages");
+        
+        // Import first page as background
+        $tplId = $pdf->importPage(1);
+        $pdf->AddPage();
+        $pdf->useTemplate($tplId, 0, 0, 210);
+        
+        // Overlay candidate information on top
+        $pdf->SetFont('helvetica', 'B', 12);
+        $pdf->SetTextColor(0, 0, 0);
+        
+        // Add Name at position (30, 180)
+        $pdf->SetXY(25, 70);
+        $pdf->Cell(0, 6, 'Name: ' . $candidate['name'], 0, 1);
+        
+        // Add Position at position (30, 195)
+        // $pdf->SetXY(30, 195);
+        // $pdf->Cell(0, 6, 'Position: ' . $candidate['position'], 0, 1);
+        
+        // Add Date at position (30, 210)
+        $pdf->SetXY(150, 70);
+        $pdf->Cell(0, 6, 'Date: ' . date('d/m/Y'), 0, 1);
+        
+        // If template has more pages, import them too
+        if ($pageCount > 1) {
+            for ($p = 2; $p <= $pageCount; $p++) {
+                $tplId = $pdf->importPage($p);
+                $pdf->AddPage();
+                $pdf->useTemplate($tplId);
             }
         }
-
+        
         $pdf->Output($outputPdf, 'F');
-        error_log('PDF generated successfully with FPDI at: ' . $outputPdf);
+        
+        if (!file_exists($outputPdf)) {
+            error_log('PDF file was not created at: ' . $outputPdf);
+            return null;
+        }
+        
+        error_log('PDF generated successfully using template at: ' . $outputPdf);
+        error_log('PDF file size: ' . filesize($outputPdf) . ' bytes');
         return $outputPdf;
 
     } catch (Throwable $e) {
-        error_log('FPDI failed: ' . $e->getMessage() . ' - trying Imagick fallback');
-        
-        try {
-            if (!extension_loaded('imagick')) {
-                throw new RuntimeException('Imagick extension not available for fallback.');
-            }
-
-            $imagick = new Imagick();
-            $imagick->setResolution(150, 150);
-            $imagick->readImage($templatePath);
-
-            $pngFiles = [];
-            foreach ($imagick as $idx => $page) {
-                $page->setImageFormat('png');
-                $page->setImageAlphaChannel(Imagick::ALPHACHANNEL_REMOVE);
-                $page->setBackgroundColor('white');
-
-                $pngPath = $tempDir . DIRECTORY_SEPARATOR . sprintf('page_%02d.png', $idx + 1);
-                $page->writeImage($pngPath);
-                $pngFiles[] = $pngPath;
-            }
-            $imagick->clear();
-            $imagick->destroy();
-
-            $pdf2 = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
-            $pdf2->setPrintHeader(false);
-            $pdf2->setPrintFooter(false);
-            $pageWidth = 210;
-            $pageHeight = 297;
-            
-            $pdf2->SetMargins(0, 0, 0);
-            $pdf2->SetAutoPageBreak(false, 0);
-            $pdf2->setImageScale(1.0);
-
-            foreach ($pngFiles as $index => $png) {
-                $pdf2->AddPage();
-                $pdf2->Image($png, 0, 0, $pageWidth, $pageHeight, 'PNG', '', '', false, 300, '', false, false, 0);
-                if ($index === 0) {
-                    $pdf2->SetFont('helvetica', 'B', 12);
-                    $pdf2->SetTextColor(0, 0, 0);
-                    $pdf2->SetXY(28, 70);
-                    $pdf2->Cell(0, 6, 'Name: ' . $candidate['name'], 0, 1);
-                    $pdf2->SetXY(28, 80);
-                    $pdf2->Cell(0, 6, 'Position: ' . $candidate['position'], 0, 1);
-                    $pdf2->SetXY(28, 90);
-                    $pdf2->Cell(0, 6, 'Date: ' . date('d/m/Y'), 0, 1);
-                }
-            }
-
-            $pdf2->Output($outputPdf, 'F');
-
-            foreach ($pngFiles as $f) if (file_exists($f)) @unlink($f);
-
-            error_log('PDF generated successfully with Imagick fallback at: ' . $outputPdf);
-            return $outputPdf;
-
-        } catch (Throwable $e2) {
-            error_log('Imagick fallback failed: ' . $e2->getMessage());
-            @unlink($outputPdf);
-            return null;
-        }
+        error_log('PDF generation failed: ' . $e->getMessage());
+        error_log('Exception trace: ' . $e->getTraceAsString());
+        return null;
     }
 }
 ?>

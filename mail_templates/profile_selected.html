@@ -1,10 +1,128 @@
 <!DOCTYPE html>
-<html>
-<head><title>Profile Selected</title></head>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile Shortlisted – Airport Ticket Executive</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            padding: 25px;
+            border-radius: 6px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+        }
+        h2 {
+            color: #1a237e;
+        }
+        h3 {
+            margin-top: 20px;
+            color: #333333;
+        }
+        p, li {
+            color: #444444;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+        ul {
+            padding-left: 18px;
+        }
+        .highlight {
+            background-color: #f1f5ff;
+            padding: 12px;
+            border-left: 4px solid #1a237e;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #555555;
+        }
+    </style>
+</head>
 <body>
-    <h1>Profile Selected</h1>
-    <p>Dear {NAME},</p>
-    <p>Your profile for {POSITION} has been selected. Please await further instructions.</p>
-    <p>Best regards,<br>Recruitment Team</p>
+
+<div class="container">
+    <h2>Profile Shortlisted – {POSITION}</h2>
+
+    <p>Dear <strong>{NAME}</strong>,</p>
+
+    <p>
+        We are pleased to inform you that your application has been shortlisted for the position of
+        <strong>{POSITION}</strong> with <strong>Akasha Services</strong>, located at
+        <strong>{WORK_LOCATION}</strong>.
+    </p>
+
+    <h3>Employment Details</h3>
+    <ul>
+        <li><strong>Monthly Salary:</strong> {SALARY} (including ESI benefits and annual bonus)</li>
+        <li><strong>Job Type:</strong> {JOB_TYPE}</li>
+        <li><strong>Work Location:</strong> {WORK_LOCATION}</li>
+        <li><strong>Working Hours:</strong> {WORK_HOURS}</li>
+        <li><strong>Working Days:</strong> {WORKING_DAYS}</li>
+        <li><strong>Weekly Off:</strong> {WEEKLY_OFF}</li>
+        <li><strong>Accommodation & Cab Facility:</strong> {FACILITY_DETAILS}</li>
+    </ul>
+
+    <h3>Selection Process</h3>
+    <p>
+        The selection process is strictly based on document verification and interview assessment.
+    </p>
+
+    <h3>Documents Required</h3>
+    <ul>
+        <li>10th Mark Sheet</li>
+        <li>12th Mark Sheet</li>
+        <li>Aadhaar Card</li>
+        <li>Passport Size Photograph</li>
+        <li>Aviation Certificate or valid registration letter</li>
+    </ul>
+
+    <div class="highlight">
+        <p>
+            <strong>Important Information:</strong><br>
+            Akasha Services follows a transparent recruitment process and does not charge any fees
+            at any stage of hiring. Selection is based solely on educational qualifications and
+            interview performance.
+        </p>
+        <p>
+            If you receive any request for payment related to this opportunity, please report it
+            immediately to our HR department.
+        </p>
+    </div>
+
+    <h3>Next Steps</h3>
+    <p>
+        If you are interested in proceeding, kindly reply to this email with the required documents
+        attached at your earliest convenience.
+    </p>
+
+    <p>
+        For any questions or assistance, feel free to contact our HR team.
+    </p>
+
+    <p>
+        <strong>HR Contact Number:</strong> {HR_CONTACT}
+    </p>
+
+    <p>
+        We look forward to your response and wish you success in the next stage of the process.
+    </p>
+
+    <div class="footer">
+        <p>
+            Warm regards,<br>
+            <strong>HR Department</strong><br>
+            Akasha Services
+        </p>
+    </div>
+</div>
+
 </body>
 </html>
